@@ -15,6 +15,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import DetailScreen from '../screens/DetailScreen';
 import CameraScreen from '../screens/Camera';
 import StorageScreen from '../screens/Storage';
+import ModalProfile from '../screens/ProfileModal';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,7 @@ export default function MainStackNavigator() {
         <Stack.Screen name="Detail" component={DetailScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Storage" component={StorageScreen} />
+        <Stack.Screen name="Modal" component={ModalProfile} />
     </Stack.Navigator>
     )
 } 

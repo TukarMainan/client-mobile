@@ -16,17 +16,24 @@ import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import { Picker } from "@react-native-picker/picker";
-import Storage from "./Storage";
 import * as ImagePicker from "expo-image-picker";
-// import { Camera } from "expo-camera";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from 'expo-file-system';
 
+import { Camera } from "expo-camera";
+import {
+  Menu,
+  MenuTrigger,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+} from "react-native-popup-menu";
 export default function Post() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [condition, setSelectedCondition] = useState("");
   const [category, setSelectedCategory] = useState("");
   const [image, setImage] = useState([]);
+  const [imageCam, setImageCam] = useState([]);
   const [city, setSelectedCity] = useState("");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +46,11 @@ export default function Post() {
   const [showPreview, setShowPreview] = useState(false);
   const [storedUri, setStoredUri] = useState(null);
   const [imageUri, setImageUri] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [visible, setVisible] = useState(false);
+  const [hasPermission, setHasPermission] = useState(null);
+
+
   let cameraRef = useRef(null);
 
   const handlePost = async () => {
@@ -77,13 +89,8 @@ export default function Post() {
     }, 2000);
 
     (async () => {
-      if (Platform.OS !== "web") {
-        const { status } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
-        }
-      }
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
     })();
   }, []);
 
@@ -106,6 +113,12 @@ export default function Post() {
   function handleDescAI() {
     console.log(description);
   }
+  const takePicture = async () => {
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setImageCam(photo.uri);
+    }
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -129,6 +142,21 @@ export default function Post() {
     );
   };
 
+  const savePicture = async () => {
+    try {
+      const fileUri = FileSystem.documentDirectory + Date.now() + '.jpg';
+      await FileSystem.moveAsync({
+        from: imageUri,
+        to: fileUri,
+      });
+      setStoredUri(fileUri);
+      await AsyncStorage.setItem('imageUri', fileUri);
+
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const resetImageUri = () => {
     setImageUri(null);
     setShowPreview(false);
@@ -137,7 +165,6 @@ export default function Post() {
   // const canEdit = userId === postUserId
   // canEdit && following condition
   return (
-
     <ScrollView style={styles.container}>
       <View style={styles.inputContainer}>
         <Text style={styles.titleLabel}>Title</Text>
@@ -229,6 +256,32 @@ export default function Post() {
           ))}
         </View>
       )}
+      {/* <Text>{console.log(imageCam, "<<<")}</Text> */}
+      {imageCam &&   (
+        <View style={styles.imageContainer}>
+          {/* <Text>{console.log(imageUri)}</Text> */}
+          {/* <Image source={{ uri: imageCam }} style={styles.image} /> */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={savePicture}>
+              <Text style={styles.buttonText}>Use Picture</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={resetImageUri}>
+              <Text style={styles.buttonText}>Retake Picture</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      {/* {imageCam.length > 0 && (
+        <View>
+          {imageCam.map((img) => (
+            <Image
+              key={img.uri}
+              source={{ uri: img.uri }}
+              style={{ width: 200, height: 200 }}
+            />
+          ))}
+        </View>
+      )} */}
       <TouchableOpacity style={styles.container}>
         <Button
           title="Take a picture"
@@ -260,7 +313,7 @@ export default function Post() {
         <Button title="Post" onPress={handlePost} />
       </View>
 
-      {/* <Modal>
+      <View>
         {showCamera && !imageUri && (
           <Camera
             style={styles.camera}
@@ -277,12 +330,33 @@ export default function Post() {
             </View>
           </Camera>
         )}
-      </Modal> */}
+      </View>
+
+      {/* <Text onPress={openMenu}> Open Cam </Text>
+      <MenuProvider>
+        
+          <MenuTrigger text="Show Menu" />
+          <Menu>
+            <MenuOptions>
+              <MenuOption onSelect={takePicture}>
+                <Text>Take Picture</Text>
+              </MenuOption>
+              <MenuOption onSelect={flipCamera}>
+                <Text>Flip Camera</Text>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
+        
+      </MenuProvider> */}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  image: {
+    width: 300,
+    height: 300,
+  },
   container: {
     flex: 1,
     padding: 20,
