@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,16 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  TextInput,
+  Button,
 } from "react-native";
 import StarRating from "react-native-star-rating";
 import Card from "../components/Card";
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 const DATA = [
   { id: "1", text: "Review 1" },
   { id: "2", text: "Review 2" },
@@ -67,21 +73,53 @@ const item = [
   },
 ];
 
-
 // const canEdit = userId === postUserId
 // canEdit && following condition
 
 export default function ProfilePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [banner, setBanner] = useState("");
+  const [profileImg, setProfileImg] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+  const [note, setNote] = useState("");
+  const [city, setCity] = useState("");
+  function handleOpenModal() {
+    setIsModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.reviewContainer}>
       <Text style={styles.reviewText}>{item.text}</Text>
     </View>
   );
 
-  const navigation = useNavigation()
-const handleItemPress = (item) => {
-  navigation.navigate("Detail", { item });
-};
+  const navigation = useNavigation();
+  const handleItemPress = (item) => {
+    navigation.navigate("Detail", { item });
+  };
+
+  function handleUserInfo() {
+    setIsModalOpen(false);
+    console.log(
+      name,
+      username,
+      email,
+      password,
+      banner,
+      profileImg,
+      phoneNum,
+      note,
+      city
+    );
+  }
 
   return (
     <ScrollView>
@@ -103,9 +141,123 @@ const handleItemPress = (item) => {
         {/* User information */}
         <View style={styles.userInfoContainer}>
           <Text style={styles.username}>Hi , William!</Text>
-          <Text style={styles.description}>
-            Edit your personal information.{" "}
+          {/* {note &&  */}
+          <Text style={styles.username}>Barter sama gua dijamin JOSS!</Text>
+          {/* } */}
+          <Text style={styles.description} onPress={handleOpenModal}>
+            Edit your personal information.
           </Text>
+
+        
+            <View style={styles.iconStyle}>
+              <Icon name="map-marker-outline" size={40} />
+            </View>
+              <Text style={styles.cityStyle} >Meeting Point Around Jakarta</Text>
+          
+
+          <Modal visible={isModalOpen}>
+            <ScrollView>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Edit Profile</Text>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Username:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={username}
+                    onChangeText={setUsername}
+                    placeholder="Enter your username"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Name:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={name}
+                    onChangeText={setName}
+                    placeholder="Enter your name"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Email:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="Enter your email"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Password:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Enter your password"
+                    secureTextEntry
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Banner Image:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={banner}
+                    onChangeText={setBanner}
+                    placeholder="Enter URL for banner image"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Profile Image:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={profileImg}
+                    onChangeText={setProfileImg}
+                    placeholder="Enter URL for profile image"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Phone Number:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={phoneNum}
+                    onChangeText={setPhoneNum}
+                    placeholder="Enter your phone number"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Notes:</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={note}
+                    onChangeText={setNote}
+                    placeholder="Enter your notes"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>City:</Text>
+                  <Picker
+                    selectedValue={city}
+                    onValueChange={(itemValue) => setCity(itemValue)}
+                    style={styles.input}
+                  >
+                    <Picker.Item
+                      label="Select a Category"
+                      value=""
+                      enabled={false}
+                    />
+                    <Picker.Item label="New York" value="New York" />
+                    <Picker.Item label="Los Angeles" value="Los Angeles" />
+                    <Picker.Item label="Chicago" value="Chicago" />
+                    <Picker.Item label="Houston" value="Houston" />
+                    <Picker.Item label="Philadelphia" value="Philadelphia" />
+                  </Picker>
+                </View>
+
+                <View style={styles.buttonContainer}>
+                  <Button title="Save" onPress={handleUserInfo} />
+                </View>
+              </View>
+            </ScrollView>
+          </Modal>
         </View>
 
         {/* Reviews */}
@@ -135,7 +287,7 @@ const handleItemPress = (item) => {
         {/* Grid list */}
         <View style={styles.gridListContainer}>
           <ScrollView>
-            <Text style={styles.reviewsTitle} >Post</Text>
+            <Text style={styles.reviewsTitle}>Post</Text>
             <View style={styles.grid}>
               {item.length > 0 &&
                 item.map((item) => (
@@ -158,6 +310,35 @@ const handleItemPress = (item) => {
 }
 
 const styles = StyleSheet.create({
+  cityStyle:{
+    fontSize:20
+  },
+  modalContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 16,
+  },
+  modalTitle: {
+    fontWeight: "bold",
+    fontSize: 20,
+    marginBottom: 16,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+  },
+  buttonContainer: {
+    marginTop: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
