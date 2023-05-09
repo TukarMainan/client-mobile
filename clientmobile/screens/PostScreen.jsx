@@ -17,7 +17,7 @@ import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 
 import { Camera } from "expo-camera";
 import {
@@ -33,7 +33,7 @@ export default function Post() {
   const [condition, setSelectedCondition] = useState("");
   const [category, setSelectedCategory] = useState("");
   const [image, setImage] = useState([]);
-  const [imageCam, setImageCam] = useState([]);
+  const [imageCam, setImageCam] = useState(null);
   const [city, setSelectedCity] = useState("");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +49,6 @@ export default function Post() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [visible, setVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
-
 
   let cameraRef = useRef(null);
 
@@ -117,6 +116,7 @@ export default function Post() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       setImageCam(photo.uri);
+      setShowPreview(true)
     }
   };
 
@@ -144,134 +144,135 @@ export default function Post() {
 
   const savePicture = async () => {
     try {
-      const fileUri = FileSystem.documentDirectory + Date.now() + '.jpg';
+      const fileUri = FileSystem.documentDirectory;
       await FileSystem.moveAsync({
         from: imageUri,
         to: fileUri,
       });
       setStoredUri(fileUri);
-      await AsyncStorage.setItem('imageUri', fileUri);
-
+      await AsyncStorage.setItem("imageUri", fileUri);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const resetImageUri = () => {
-    setImageUri(null);
-    setShowPreview(false);
-  };
+
+  function handleRetake(){
+    setImageCam(false)
+    setShowPreview(false)
+  }
 
   // const canEdit = userId === postUserId
   // canEdit && following condition
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.titleLabel}>Title</Text>
-        <TextInput
-          placeholder="Title"
-          style={styles.input}
-          value={title}
-          onChangeText={(text) => setTitle(text)}
-        />
-      </View>
-
-      <View style={styles.descAI}>
-        <Text onPress={handleDescAI}>Generate Title With AI</Text>
-      </View>
-
-      <View style={styles.inputDescription}>
-        <Text style={styles.descriptionTitle}>Description</Text>
-        <TextInput
-          numberOfLines={4}
-          placeholder="Description"
-          style={[styles.input, styles.descIn]}
-          value={description}
-          onChangeText={(text) => setDescription(text)}
-          multiline={true}
-        />
-      </View>
-      <View style={styles.descAI}>
-        <Text onPress={handleDescAI}>Generate Description With AI</Text>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Condition</Text>
-        <Picker
-          style={styles.dropdown}
-          selectedValue={condition}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedCondition(itemValue)
-          }
-        >
-          <Picker.Item label="Select a Category" value="" enabled={false} />
-          <Picker.Item label="Option 1" value="option1" />
-          <Picker.Item label="Option 2" value="option2" />
-          <Picker.Item label="Option 3" value="option3" />
-        </Picker>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>City</Text>
-        <Picker
-          style={styles.dropdown}
-          selectedValue={city}
-          onValueChange={(itemValue, itemIndex) => setSelectedCity(itemValue)}
-        >
-          <Picker.Item label="Select a City" value="" enabled={false} />
-
-          <Picker.Item label="Option 1" value="option1" />
-          <Picker.Item label="Option 2" value="option2" />
-          <Picker.Item label="Option 3" value="option3" />
-        </Picker>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Category</Text>
-        <Picker
-          style={styles.dropdown}
-          selectedValue={category}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedCategory(itemValue)
-          }
-        >
-          <Picker.Item label="Select a Category" value="" enabled={false} />
-          <Picker.Item label="Option 1" value="option1" />
-          <Picker.Item label="Option 2" value="option2" />
-          <Picker.Item label="Option 3" value="option3" />
-        </Picker>
-      </View>
-
-      <TouchableOpacity style={styles.container}>
-        <Button title="Pick an image from your gallery" onPress={pickImage} />
-      </TouchableOpacity>
-      {image.length > 0 && (
-        <View>
-          {image.map((image) => (
-            <Image
-              key={image.uri}
-              source={{ uri: image.uri }}
-              style={{ width: 200, height: 200 }}
-            />
-          ))}
+    <>
+      <ScrollView style={styles.container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.titleLabel}>Title</Text>
+          <TextInput
+            placeholder="Title"
+            style={styles.input}
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
         </View>
-      )}
-      {/* <Text>{console.log(imageCam, "<<<")}</Text> */}
-      {imageCam &&   (
-        <View style={styles.imageContainer}>
-          {/* <Text>{console.log(imageUri)}</Text> */}
-          {/* <Image source={{ uri: imageCam }} style={styles.image} /> */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={savePicture}>
-              <Text style={styles.buttonText}>Use Picture</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={resetImageUri}>
-              <Text style={styles.buttonText}>Retake Picture</Text>
-            </TouchableOpacity>
+
+        <View style={styles.descAI}>
+          <Text onPress={handleDescAI}>Generate Title With AI</Text>
+        </View>
+
+        <View style={styles.inputDescription}>
+          <Text style={styles.descriptionTitle}>Description</Text>
+          <TextInput
+            numberOfLines={4}
+            placeholder="Description"
+            style={[styles.input, styles.descIn]}
+            value={description}
+            onChangeText={(text) => setDescription(text)}
+            multiline={true}
+          />
+        </View>
+        <View style={styles.descAI}>
+          <Text onPress={handleDescAI}>Generate Description With AI</Text>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Condition</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={condition}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedCondition(itemValue)
+            }
+          >
+            <Picker.Item label="Select a Category" value="" enabled={false} />
+            <Picker.Item label="Option 1" value="option1" />
+            <Picker.Item label="Option 2" value="option2" />
+            <Picker.Item label="Option 3" value="option3" />
+          </Picker>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>City</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={city}
+            onValueChange={(itemValue, itemIndex) => setSelectedCity(itemValue)}
+          >
+            <Picker.Item label="Select a City" value="" enabled={false} />
+
+            <Picker.Item label="Option 1" value="option1" />
+            <Picker.Item label="Option 2" value="option2" />
+            <Picker.Item label="Option 3" value="option3" />
+          </Picker>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Category</Text>
+          <Picker
+            style={styles.dropdown}
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedCategory(itemValue)
+            }
+          >
+            <Picker.Item label="Select a Category" value="" enabled={false} />
+            <Picker.Item label="Option 1" value="option1" />
+            <Picker.Item label="Option 2" value="option2" />
+            <Picker.Item label="Option 3" value="option3" />
+          </Picker>
+        </View>
+
+        <TouchableOpacity style={styles.container}>
+          <Button title="Pick an image from your gallery" onPress={pickImage} />
+        </TouchableOpacity>
+        {image.length > 0 && (
+          <View>
+            {image.map((image) => (
+              <Image
+                key={image.uri}
+                source={{ uri: image.uri }}
+                style={{ width: 200, height: 200 }}
+              />
+            ))}
           </View>
-        </View>
-      )}
-      {/* {imageCam.length > 0 && (
+        )}
+        {/* <Text>{console.log(imageCam, "<<<")}</Text> */}
+        {/* {imageCam && (
+          <View style={styles.imageContainer}>
+           
+            <Image source={{ uri: imageCam }} style={styles.image} />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={savePicture}>
+                <Text style={styles.buttonText}>Use Picture</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={resetImageUri}>
+                <Text style={styles.buttonText}>Retake Picture</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )} */}
+        {/* {imageCam.length > 0 && (
         <View>
           {imageCam.map((img) => (
             <Image
@@ -282,77 +283,103 @@ export default function Post() {
           ))}
         </View>
       )} */}
-      <TouchableOpacity style={styles.container}>
-        <Button
-          title="Take a picture"
-          onPress={() => {
-            setShowCamera(true);
-          }}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.mapContainer}>
-        <Text style={styles.label}>Meeting Point</Text>
-        <View style={styles.map}>
-          <MapView
-            style={{ flex: 1 }}
-            region={{
-              latitude: meetingPoint.latitude,
-              longitude: meetingPoint.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+        <TouchableOpacity style={styles.container}>
+          <Button
+            title="Take a picture"
+            onPress={() => {
+              setShowCamera(true);
             }}
-            onPress={(event) => setMeetingPoint(event.nativeEvent.coordinate)}
-          >
-            <Marker coordinate={meetingPoint} />
-          </MapView>
+          />
+        </TouchableOpacity>
+
+        <View style={styles.mapContainer}>
+          <Text style={styles.label}>Meeting Point</Text>
+          <View style={styles.map}>
+            <MapView
+              style={{ flex: 1 }}
+              region={{
+                latitude: meetingPoint.latitude,
+                longitude: meetingPoint.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              onPress={(event) => setMeetingPoint(event.nativeEvent.coordinate)}
+            >
+              <Marker coordinate={meetingPoint} />
+            </MapView>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.buttonContainer}>
-        <Button title="Post" onPress={handlePost} />
-      </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Post" onPress={handlePost} />
+        </View>
 
-      <View>
+      </ScrollView>
+      <Modal visible={showCamera} animationType="slide">
         {showCamera && !imageUri && (
-          <Camera
-            style={styles.camera}
-            type={type}
-            ref={(ref) => (cameraRef = ref)}
-          >
+          <Camera style={styles.camera} type={type} ref={(ref) => (cameraRef = ref)}>
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={flipCamera}>
+              <TouchableOpacity style={styles.buttonCam} onPress={flipCamera}>
                 <Text style={styles.buttonText}>Flip</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={takePicture}>
+              <TouchableOpacity style={styles.buttonCam} onPress={takePicture}>
                 <Text style={styles.buttonText}>Take Picture</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonCam}
+                onPress={() => {
+                  setShowCamera(false);
+                }}
+              >
+                <Text style={styles.buttonText}>Back</Text>
               </TouchableOpacity>
             </View>
           </Camera>
         )}
-      </View>
-
-      {/* <Text onPress={openMenu}> Open Cam </Text>
-      <MenuProvider>
-        
-          <MenuTrigger text="Show Menu" />
-          <Menu>
-            <MenuOptions>
-              <MenuOption onSelect={takePicture}>
-                <Text>Take Picture</Text>
-              </MenuOption>
-              <MenuOption onSelect={flipCamera}>
-                <Text>Flip Camera</Text>
-              </MenuOption>
-            </MenuOptions>
-          </Menu>
-        
-      </MenuProvider> */}
-    </ScrollView>
+      </Modal>
+      <Modal visible={showPreview} animationType="slide">
+          <View style={styles.preview}>
+            <Image source={{ uri: imageCam }} style={styles.previewImage} />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.retakeTouch}
+                onPress={handleRetake}
+              >
+                <Text style={styles.textRetake}>Retake</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.retakeTouch} onPress={savePicture}>
+                <Text style={styles.textRetake}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  preview:{
+    backgroundColor:'#e39ff6'
+  },
+
+  retakeTouch:{
+    backgroundColor:'#f5f5d1',
+    flex:1,
+    borderRadius:30,
+    height:50,
+
+  },
+  textRetake:{
+    fontSize:30,
+    fontWeight:'bold',
+    textAlign:'center',
+    alignContent:'center'
+  },
+  previewImage: {
+    width: '100%',
+    height: '85%',
+    resizeMode:'cover',
+  },
   image: {
     width: 300,
     height: 300,
@@ -481,18 +508,20 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
-    marginTop: 15,
-    paddingBottom: 20,
-    borderRadius: 20,
+    backgroundColor:'#FFFF',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#000000",
     paddingVertical: 12,
     borderRadius: 20,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
+    borderWidth:1,
+    borderColor:"#000000",
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -568,5 +597,29 @@ const styles = StyleSheet.create({
   spinnerLogo: {
     width: 85,
     height: 85,
+  },
+  conCam: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "black",
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop:50
+  },
+  buttonCam: {
+    backgroundColor: "#fff",
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000",
   },
 });
