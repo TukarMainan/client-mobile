@@ -59,8 +59,8 @@ const DATA = [
 
 export default function Trade({ route }) {
   const navigation = useNavigation();
-  function handleTrade({ item }) {
-    navigation.navigate("Chat", { item });
+  function handleTrade() {
+    navigation.navigate("Order");
     // update status
     console.log("handleTrade");
   }
@@ -69,10 +69,10 @@ export default function Trade({ route }) {
     <>
       <ScrollView>
         <View style={styles.container}>
-          <View style={{flex:1,flexDirection:'row',paddingTop:20}} >
-            <Image source={require("../logo.png")} style={{width:50,height:50,flex:1}}/>
+          {/* <View style={{flex:1,flexDirection:'row'}} >
+            <Image source={require("../logo.png")} style={{width:50,height:150,flex:1}}/>
             <Text style={{flex:1,}} >Your Toys</Text>
-          </View>
+          </View> */}
           {DATA?.map((item) => {
             return (
               <View style={styles.cardContainer} key={item.id}>

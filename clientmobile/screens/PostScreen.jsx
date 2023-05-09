@@ -116,7 +116,7 @@ export default function Post() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       setImageCam(photo.uri);
-      setShowPreview(true)
+      setShowPreview(true);
     }
   };
 
@@ -156,10 +156,9 @@ export default function Post() {
     }
   };
 
-
-  function handleRetake(){
-    setImageCam(false)
-    setShowPreview(false)
+  function handleRetake() {
+    setImageCam(false);
+    setShowPreview(false);
   }
 
   // const canEdit = userId === postUserId
@@ -313,11 +312,14 @@ export default function Post() {
         <View style={styles.buttonContainer}>
           <Button title="Post" onPress={handlePost} />
         </View>
-
       </ScrollView>
       <Modal visible={showCamera} animationType="slide">
         {showCamera && !imageUri && (
-          <Camera style={styles.camera} type={type} ref={(ref) => (cameraRef = ref)}>
+          <Camera
+            style={styles.camera}
+            type={type}
+            ref={(ref) => (cameraRef = ref)}
+          >
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.buttonCam} onPress={flipCamera}>
                 <Text style={styles.buttonText}>Flip</Text>
@@ -338,47 +340,43 @@ export default function Post() {
         )}
       </Modal>
       <Modal visible={showPreview} animationType="slide">
-          <View style={styles.preview}>
-            <Image source={{ uri: imageCam }} style={styles.previewImage} />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.retakeTouch}
-                onPress={handleRetake}
-              >
-                <Text style={styles.textRetake}>Retake</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.retakeTouch} onPress={savePicture}>
-                <Text style={styles.textRetake}>Save</Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.preview}>
+          <Image source={{ uri: imageCam }} style={styles.previewImage} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.retakeTouch} onPress={handleRetake}>
+              <Text style={styles.textRetake}>Retake</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.retakeTouch} onPress={savePicture}>
+              <Text style={styles.textRetake}>Save</Text>
+            </TouchableOpacity>
           </View>
+        </View>
       </Modal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  preview:{
-    backgroundColor:'#e39ff6'
+  preview: {
+    backgroundColor: "#e39ff6",
   },
 
-  retakeTouch:{
-    backgroundColor:'#f5f5d1',
-    flex:1,
-    borderRadius:30,
-    height:50,
-
+  retakeTouch: {
+    backgroundColor: "#f5f5d1",
+    flex: 1,
+    borderRadius: 30,
+    height: 50,
   },
-  textRetake:{
-    fontSize:30,
-    fontWeight:'bold',
-    textAlign:'center',
-    alignContent:'center'
+  textRetake: {
+    fontSize: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    alignContent: "center",
   },
   previewImage: {
-    width: '100%',
-    height: '85%',
-    resizeMode:'cover',
+    width: "100%",
+    height: "85%",
+    resizeMode: "cover",
   },
   image: {
     width: 300,
@@ -504,14 +502,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 16,
     paddingLeft: 15,
-    paddingBottom: 7,
+    paddingBottom: 10,
+    height:40
   },
 
   buttonContainer: {
-    backgroundColor:'#FFFF',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10
+    backgroundColor: "#FFFF",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 10,
   },
   button: {
     backgroundColor: "#000000",
@@ -520,8 +519,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    borderWidth:1,
-    borderColor:"#000000",
+    borderWidth: 1,
+    borderColor: "#000000",
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -611,7 +610,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
-    marginTop:50
+    marginTop: 50,
   },
   buttonCam: {
     backgroundColor: "#fff",

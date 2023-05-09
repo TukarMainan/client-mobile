@@ -17,6 +17,7 @@ import CameraScreen from '../screens/Camera';
 import StorageScreen from '../screens/Storage';
 import ModalProfile from '../screens/ProfileModal';
 import TradeScreen from '../screens/TradeScreen';
+import Review from '../screens/Review';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,7 +25,7 @@ const Tab = createBottomTabNavigator();
 function HomeTabNavigator() {
     return (
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="Homee"
         screenOptions={{
           activeTintColor: '#007aff',
           inactiveTintColor: '#8e8e93',
@@ -88,7 +89,7 @@ export default function MainStackNavigator() {
     return (
     <Stack.Navigator initialRouteName='Homes'>
         <Stack.Screen name="Homes" component={HomeTabNavigator} options={{ headerShown: false }}/>
-        <Stack.Screen name="Order" component={OrderScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Order" component={OrderScreen}  />
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={Message} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -100,6 +101,7 @@ export default function MainStackNavigator() {
         <Stack.Screen name="Storage" component={StorageScreen} />
         <Stack.Screen name="Modal" component={ModalProfile} />
         <Stack.Screen name="Trade" component={TradeScreen}  />
+        <Stack.Screen name="Review" component={Review}  />
     </Stack.Navigator>
     )
 } 

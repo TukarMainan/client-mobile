@@ -148,113 +148,111 @@ export default function ProfilePage() {
             Edit your personal information.
           </Text>
 
-        
-            <View style={styles.iconStyle}>
-              <Icon name="map-marker-outline" size={40} />
-            </View>
-              <Text style={styles.cityStyle} >Meeting Point Around Jakarta</Text>
-          
+          <View style={styles.iconStyle}>
+            <Icon name="map-marker-outline" size={40} />
+          </View>
+          <Text style={styles.cityStyle}>Meeting Point Around Jakarta</Text>
 
           <Modal visible={isModalOpen}>
-            <ScrollView>
-              <View style={styles.modalContainer}>
-                <Text style={styles.modalTitle}>Edit Profile</Text>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Username:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={username}
-                    onChangeText={setUsername}
-                    placeholder="Enter your username"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Name:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={name}
-                    onChangeText={setName}
-                    placeholder="Enter your name"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Email:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="Enter your email"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Password:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Enter your password"
-                    secureTextEntry
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Banner Image:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={banner}
-                    onChangeText={setBanner}
-                    placeholder="Enter URL for banner image"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Profile Image:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={profileImg}
-                    onChangeText={setProfileImg}
-                    placeholder="Enter URL for profile image"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Phone Number:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={phoneNum}
-                    onChangeText={setPhoneNum}
-                    placeholder="Enter your phone number"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>Notes:</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={note}
-                    onChangeText={setNote}
-                    placeholder="Enter your notes"
-                  />
-                </View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.label}>City:</Text>
-                  <Picker
-                    selectedValue={city}
-                    onValueChange={(itemValue) => setCity(itemValue)}
-                    style={styles.input}
-                  >
-                    <Picker.Item
-                      label="Select a Category"
-                      value=""
-                      enabled={false}
-                    />
-                    <Picker.Item label="New York" value="New York" />
-                    <Picker.Item label="Los Angeles" value="Los Angeles" />
-                    <Picker.Item label="Chicago" value="Chicago" />
-                    <Picker.Item label="Houston" value="Houston" />
-                    <Picker.Item label="Philadelphia" value="Philadelphia" />
-                  </Picker>
-                </View>
+            <ScrollView style={styles.container}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Username</Text>
+                <TextInput
+                  placeholder="Username"
+                  style={styles.input}
+                  value={username}
+                  onChangeText={(text) => setUsername(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Name</Text>
+                <TextInput
+                  placeholder="Name"
+                  style={styles.input}
+                  value={name}
+                  onChangeText={(text) => setName(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Email</Text>
+                <TextInput
+                  placeholder="Email"
+                  style={styles.input}
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                />
+              </View>
 
-                <View style={styles.buttonContainer}>
-                  <Button title="Save" onPress={handleUserInfo} />
-                </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Password</Text>
+                <TextInput
+                  secureTextEntry
+                  placeholder="Password"
+                  style={styles.input}
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Profile Image</Text>
+                <TextInput
+                  placeholder="Profile Image"
+                  style={styles.input}
+                  value={profileImg}
+                  onChangeText={(text) => setProfileImg(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Banner</Text>
+                <TextInput
+                  placeholder="Banner"
+                  style={styles.input}
+                  value={banner}
+                  onChangeText={(text) => setBanner(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Note</Text>
+                <TextInput
+                  placeholder="Note"
+                  style={styles.input}
+                  value={note}
+                  onChangeText={(text) => setNote(text)}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>Phone Number</Text>
+                <TextInput
+                  placeholder="Phone Number"
+                  style={styles.input}
+                  value={phoneNum}
+                  onChangeText={(text) => setPhoneNum(text)}
+                />
+              </View>
+         
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.titleLabel}>City</Text>
+                <Picker
+                  selectedValue={city}
+                  onValueChange={(itemValue) => setCity(itemValue)}
+                  style={styles.dropdown}
+                >
+                  <Picker.Item
+                    label="Select a Category"
+                    value=""
+                    enabled={false}
+                  />
+                  <Picker.Item label="New York" value="New York" />
+                  <Picker.Item label="Los Angeles" value="Los Angeles" />
+                  <Picker.Item label="Chicago" value="Chicago" />
+                  <Picker.Item label="Houston" value="Houston" />
+                  <Picker.Item label="Philadelphia" value="Philadelphia" />
+                </Picker>
+              </View>
+
+              <View style={styles.buttonContainer}>
+                <Button title="Post" onPress={handleUserInfo} />
               </View>
             </ScrollView>
           </Modal>
@@ -310,8 +308,28 @@ export default function ProfilePage() {
 }
 
 const styles = StyleSheet.create({
-  cityStyle:{
-    fontSize:20
+  dropdown: {
+    height: 50,
+    width: "100%",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#00000",
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginBottom: 31,
+  },
+  titleLabel: {
+  paddingTop:15,
+  fontSize: 18,
+  fontWeight: "bold",
+  textAlign: "center",
+  borderRadius: 20,
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: 1,
+},
+  cityStyle: {
+    fontSize: 20,
   },
   modalContainer: {
     backgroundColor: "#fff",
@@ -324,17 +342,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputContainer: {
-    marginBottom: 16,
+    borderRadius: 50,
+    backgroundColor: "#f2f2f2",
+    width: "90%",
+    height: 50,
+    justifyContent: "center",
+    margin: 20,
   },
   label: {
     fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 4,
-    padding: 8,
+    marginBottom: 40,
+    fontSize: 16,
+    paddingLeft: 15,
+    paddingBottom: 10,
+    height:40
   },
   buttonContainer: {
     marginTop: 16,
