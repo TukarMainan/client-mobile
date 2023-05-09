@@ -14,7 +14,6 @@ import {
   RadioButton,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-
 import Card from "../components/Card";
 import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";

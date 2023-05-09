@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import StarRating from "react-native-star-rating";
+import { func } from "prop-types";
 
 const DetailsPage = ({ route }) => {
   const { item } = route.params;
@@ -101,6 +102,13 @@ const DetailsPage = ({ route }) => {
   //     });
   // };
 
+  function handleDelete(){
+    console.log('handleDelete');
+  }
+  function handleStatus(){
+    console.log('handleStatus');
+  }
+
   return (
     <LinearGradient colors={["#A855F7", "#FFFFFF"]} style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -127,9 +135,6 @@ const DetailsPage = ({ route }) => {
               ))}
             </View>
           </View>
-
-          <View style={styles.content}>{/* Your content goes here */}</View>
-
           <View style={styles.mapContainer}>
             <Text style={styles.label}>Meeting Point</Text>
             <View style={styles.map}>
@@ -149,6 +154,27 @@ const DetailsPage = ({ route }) => {
               </MapView>
             </View>
           </View>
+
+          <TouchableOpacity
+            style={styles.tradeButton}
+            onPress={handleTradeButton}
+          >
+            <Text style={styles.tradeText}>Trade Toys</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.tradeButton}
+            onPress={handleDelete}
+          >
+            <Text style={styles.tradeText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.tradeButton}
+            onPress={handleStatus}
+          >
+            <Text style={styles.tradeText}>Set Inactive</Text>
+          </TouchableOpacity>
+
+          
           <View style={styles.header}>
             <View style={styles.avatarContainer}>
               <Image source={require("../toys.png")} style={styles.avatar} />
@@ -176,12 +202,7 @@ const DetailsPage = ({ route }) => {
               </TouchableOpacity>
             </View>
           </View>
-          
-          <TouchableOpacity style={styles.tradeButton}
-            onPress={handleTradeButton}
-          >
-            <Text style={styles.tradeText} >Trade Toys</Text>
-          </TouchableOpacity>
+
           <View style={styles.containerr}>
             <View style={styles.box}>
               <Text style={styles.title}>Description</Text>
@@ -207,26 +228,27 @@ const DetailsPage = ({ route }) => {
                 orci, nec dictum purus. Curabitur vitae lacus nec nunc laoreet
                 aliquam.
               </Text>
-            </View>
-          </View>
-          <Text style={styles.commentsHeader}>Comments</Text>
-          <View style={styles.commentContainerBack}>
-            {commentt.map((comment) => (
-              <View key={comment.id} style={styles.commentContainer}>
-                <Text style={styles.usernameComment}>Joko</Text>
-                <Text style={styles.commentText}>{comment}</Text>
+              <Text style={styles.commentsHeader}>Comments</Text>
+
+              <View style={styles.commentContainerBack}>
+                {commentt.map((comment) => (
+                  <View key={comment.id} style={styles.commentContainer}>
+                    <Text style={styles.usernameComment}>Joko</Text>
+                    <Text style={styles.commentText}>{comment}</Text>
+                  </View>
+                ))}
+                <View style={styles.inputCommentContainer}>
+                  <TextInput
+                    style={styles.textInputContainer}
+                    placeholder="Add a comment..."
+                    value={comment}
+                    onChangeText={(text) => setComment(text)}
+                  />
+                  <TouchableOpacity>
+                    <Text style={styles.buttonText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            ))}
-            <View style={styles.inputCommentContainer}>
-              <TextInput
-                style={styles.textInputContainer}
-                placeholder="Add a comment..."
-                value={comment}
-                onChangeText={(text) => setComment(text)}
-              />
-              <TouchableOpacity>
-                <Text style={styles.buttonText}>Submit</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -236,40 +258,44 @@ const DetailsPage = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  tradeButton:{
-    borderWidth:1,
-    borderColor:'#000000',
-    backgroundColor:'#ecdff5',
-    borderRadius:10,
-    marginLeft:10,
-    marginRight:10,
+  tradeButton: {
+    borderColor: "#000000",
+    backgroundColor: "#ecdff5",
+    borderRadius: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    height: 40,
   },
-  tradeText:{
-    fontSize:22,
-    textAlign:'center'
+  tradeText: {
+    fontSize: 22,
+    textAlign: "center",
+    paddingTop: 5,
   },
-  
+
   label: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
     textAlign: "center",
   },
-  mapContainer: { //map container
+  mapContainer: {
+    //map container
+    marginTop:20,
     height: 200,
-    width: 300,
+    width: 400,
     borderRadius: 10,
-    marginLeft: 50,
     backgroundColor: "#ecdff5",
   },
   map: {
     flex: 1,
   },
   title: {
-    color: "#888",
+    color: "#000",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    textAlign:'center'
   },
   chatContainer: {
     flexDirection: "row",
@@ -277,10 +303,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
     paddingHorizontal: 90,
-    borderWidth:1
+    borderWidth: 1,
   },
   chat: {
-    color: "white",
+    color: "#000",
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
@@ -297,7 +323,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description: {
-    color: "#888",
+    color: "#000",
     fontSize: 16,
     lineHeight: 24,
   },
@@ -307,13 +333,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  containerr: { 
+  containerr: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 25,
   },
-  box: { //container description
+  box: {
+    //container description
     backgroundColor: "#FFFF",
     padding: 20,
     borderRadius: 10,
@@ -336,8 +363,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   selectedImage: {
-    width: 300,
-    height: 300,
+    width: "100%",
+    height: 350,
     // resizeMode: "contain",
     borderWidth: 5,
     borderColor: "#FFFF",
@@ -360,14 +387,15 @@ const styles = StyleSheet.create({
   detailsContainer: {
     marginTop: 50,
   },
-  header: {  //container
+  header: {
+    //container
     marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ecdff5",
     padding: 5,
     paddingBottom: 20,
-    marginBottom: 20,
+    marginBottom: 5,
     marginTop: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -390,6 +418,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: 5,
+
   },
   name: {
     fontSize: 20,
@@ -431,7 +460,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FFFF",
     marginTop: 5,
-    borderRadius:5
+    borderRadius: 5,
   },
   inputCommentContainer: {
     flexDirection: "row",
@@ -457,7 +486,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 10,
     borderTopRightRadius: 3,
-    borderWidth: 1,
     backgroundColor: "#ecdff5",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
@@ -468,6 +496,7 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   commentsHeader: {
+    borderTopWidth:1,
     textAlign: "center",
     fontSize: 23,
   },
