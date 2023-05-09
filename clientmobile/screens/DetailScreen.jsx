@@ -15,12 +15,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import StarRating from "react-native-star-rating";
-// import PropTypes from 'prop-types';
-// DetailsPage.PropTypes = {
-//   route: PropTypes.shape({
-//     item: PropTypes.string.isRequired,
-//   }).isRequired,
-// }
 
 const DetailsPage = ({ route }) => {
   const { item } = route.params;
@@ -50,9 +44,9 @@ const DetailsPage = ({ route }) => {
 
   const navigation = useNavigation();
 
-  function handleChat(event, item) {
+  function handleTradeButton(event, item) {
     event.persist();
-    navigation.navigate("Chat", { item });
+    navigation.navigate("Trade", { item });
   }
 
   const BlinkingText = ({ text, style }) => {
@@ -110,32 +104,6 @@ const DetailsPage = ({ route }) => {
   return (
     <LinearGradient colors={["#A855F7", "#FFFFFF"]} style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.avatarContainer}>
-            <Image source={require("../toys.png")} style={styles.avatar} />
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.name}>John Doe</Text>
-            <Text style={styles.bio}>
-              <StarRating
-                disabled={true}
-                maxStars={5}
-                rating={item.review}
-                starSize={20}
-                fullStarColor={"#f1c40f"}
-                emptyStarColor={"#ccc"}
-                halfStarEnabled={true}
-              />
-            </Text>
-            <TouchableOpacity
-              style={styles.chatContainer}
-              onPress={(item) => handleChat(item)}
-            >
-              <BlinkingText text="Chat Now" style={styles.chat} />
-              <Icon name="message" style={styles.icon} size={22} />
-            </TouchableOpacity>
-          </View>
-        </View>
         <ScrollView>
           <View style={styles.imageContainer}>
             <Image
@@ -181,6 +149,39 @@ const DetailsPage = ({ route }) => {
               </MapView>
             </View>
           </View>
+          <View style={styles.header}>
+            <View style={styles.avatarContainer}>
+              <Image source={require("../toys.png")} style={styles.avatar} />
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.name}>John Doe</Text>
+              <Text style={styles.bio}>
+                <StarRating
+                  disabled={true}
+                  maxStars={5}
+                  rating={item.review}
+                  starSize={20}
+                  fullStarColor={"#f1c40f"}
+                  emptyStarColor={"#ccc"}
+                  halfStarEnabled={true}
+                />
+              </Text>
+              <TouchableOpacity
+                style={styles.chatContainer}
+                onPress={(item) => handleChat(item)}
+              >
+                <Text style={styles.chat}>Chat Now</Text>
+
+                <Icon name="message" style={styles.icon} size={22} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          
+          <TouchableOpacity style={styles.tradeButton}
+            onPress={handleTradeButton}
+          >
+            <Text style={styles.tradeText} >Trade Toys</Text>
+          </TouchableOpacity>
           <View style={styles.containerr}>
             <View style={styles.box}>
               <Text style={styles.title}>Description</Text>
@@ -208,47 +209,58 @@ const DetailsPage = ({ route }) => {
               </Text>
             </View>
           </View>
-          <Text style={styles.commentsHeader} >Comments</Text>
+          <Text style={styles.commentsHeader}>Comments</Text>
           <View style={styles.commentContainerBack}>
-          {commentt.map((comment) => (
-          <View key={comment.id} style={styles.commentContainer}>
-            <Text  style={styles.usernameComment} >Joko</Text>
-            <Text style={styles.commentText}>{comment}</Text>
+            {commentt.map((comment) => (
+              <View key={comment.id} style={styles.commentContainer}>
+                <Text style={styles.usernameComment}>Joko</Text>
+                <Text style={styles.commentText}>{comment}</Text>
+              </View>
+            ))}
+            <View style={styles.inputCommentContainer}>
+              <TextInput
+                style={styles.textInputContainer}
+                placeholder="Add a comment..."
+                value={comment}
+                onChangeText={(text) => setComment(text)}
+              />
+              <TouchableOpacity>
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        ))}
-        <View style={styles.inputCommentContainer}>
-          <TextInput
-            style={styles.textInputContainer}
-            placeholder="Add a comment..."
-            value={comment}
-            onChangeText={(text) => setComment(text)}
-          />
-          <TouchableOpacity>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-        
-      </View>
         </ScrollView>
       </View>
-      
     </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  tradeButton:{
+    borderWidth:1,
+    borderColor:'#000000',
+    backgroundColor:'#ecdff5',
+    borderRadius:10,
+    marginLeft:10,
+    marginRight:10,
+  },
+  tradeText:{
+    fontSize:22,
+    textAlign:'center'
+  },
+  
   label: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
     textAlign: "center",
   },
-  mapContainer: {
+  mapContainer: { //map container
     height: 200,
     width: 300,
     borderRadius: 10,
     marginLeft: 50,
-    backgroundColor: "#888",
+    backgroundColor: "#ecdff5",
   },
   map: {
     flex: 1,
@@ -263,9 +275,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#888",
     borderRadius: 10,
     paddingHorizontal: 90,
+    borderWidth:1
   },
   chat: {
     color: "white",
@@ -295,14 +307,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  containerr: {
+  containerr: { 
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 25,
   },
-  box: {
-    backgroundColor: "rgba(0,0,0,0.8)",
+  box: { //container description
+    backgroundColor: "#FFFF",
     padding: 20,
     borderRadius: 10,
   },
@@ -348,20 +360,27 @@ const styles = StyleSheet.create({
   detailsContainer: {
     marginTop: 50,
   },
-  header: {
+  header: {  //container
     marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ecdff5",
     padding: 5,
-    borderRadius: 70,
     paddingBottom: 20,
     marginBottom: 20,
     marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 10,
   },
   avatarContainer: {
     borderWidth: 2,
-    borderColor: "#00aaff",
+    borderColor: "#000",
     borderRadius: 70,
   },
   avatar: {
@@ -410,18 +429,16 @@ const styles = StyleSheet.create({
 
   commentContainerBack: {
     padding: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    marginTop:5,
-    borderRadius:20,
-    marginBottom:20
-
+    backgroundColor: "#FFFF",
+    marginTop: 5,
+    borderRadius:5
   },
   inputCommentContainer: {
     flexDirection: "row",
     marginBottom: 10,
-    backgroundColor:'#ecdff5',
-    borderRadius:20,
-    paddingLeft:6
+    backgroundColor: "#ecdff5",
+    borderRadius: 20,
+    paddingLeft: 6,
   },
   textInputContainer: {
     flex: 1,
@@ -432,29 +449,28 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#007AFF",
     fontWeight: "bold",
-    marginRight:10,
-    paddingTop:9
+    marginRight: 10,
+    paddingTop: 9,
   },
   commentContainer: {
     padding: 10,
-  marginBottom: 10,
-  borderRadius: 10,
-  borderTopRightRadius: 3,
-  borderWidth: 1,
-  backgroundColor: "#FFFF",
-  borderBottomRightRadius: 20,
-  borderBottomLeftRadius: 20,
-  borderTopLeftRadius: 20,
+    marginBottom: 10,
+    borderRadius: 10,
+    borderTopRightRadius: 3,
+    borderWidth: 1,
+    backgroundColor: "#ecdff5",
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderTopLeftRadius: 20,
   },
   commentText: {
     fontSize: 16,
     color: "#000000",
   },
-  commentsHeader :{
-    textAlign:'center',
-    fontSize:23,
-  }
+  commentsHeader: {
+    textAlign: "center",
+    fontSize: 23,
+  },
 });
-
 
 export default DetailsPage;

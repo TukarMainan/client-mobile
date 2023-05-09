@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from '../screens/HomeScreen'
 import MessageScreen from '../screens/MessageScreen'
-import NotifScreen from '../screens/NotificationScreen'
+import OrderScreen from '../screens/OrderScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import PostScreen from '../screens/PostScreen'
 import Message from '../screens/MessageScreen';
@@ -16,6 +16,7 @@ import DetailScreen from '../screens/DetailScreen';
 import CameraScreen from '../screens/Camera';
 import StorageScreen from '../screens/Storage';
 import ModalProfile from '../screens/ProfileModal';
+import TradeScreen from '../screens/TradeScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,8 +42,8 @@ function HomeTabNavigator() {
           }}
         />
         <Tab.Screen
-          name="Notification"
-          component={NotifScreen}
+          name="Order"
+          component={OrderScreen}
           options={{
             tabBarIcon: ({ color }) => (
               <Icon name="bell" color={color} size={24} />
@@ -87,7 +88,7 @@ export default function MainStackNavigator() {
     return (
     <Stack.Navigator initialRouteName='Homes'>
         <Stack.Screen name="Homes" component={HomeTabNavigator} options={{ headerShown: false }}/>
-        <Stack.Screen name="Notification" component={NotifScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Order" component={OrderScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Post" component={PostScreen} />
         <Stack.Screen name="Message" component={Message} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
@@ -98,6 +99,7 @@ export default function MainStackNavigator() {
         <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="Storage" component={StorageScreen} />
         <Stack.Screen name="Modal" component={ModalProfile} />
+        <Stack.Screen name="Trade" component={TradeScreen}  />
     </Stack.Navigator>
     )
 } 
