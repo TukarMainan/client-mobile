@@ -16,7 +16,8 @@ import Card from "../components/Card";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 const DATA = [
   { id: "1", text: "Review 1" },
   { id: "2", text: "Review 2" },
@@ -102,7 +103,7 @@ export default function ProfilePage() {
   );
 
   const navigation = useNavigation();
-  const handleItemPress = item => {
+  const handleItemPress = (item) => {
     navigation.navigate("Detail", { item });
   };
 
@@ -120,6 +121,33 @@ export default function ProfilePage() {
       city
     );
   }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      multiple: true,
+    });
+
+    if (!result.canceled) {
+      setProfileImg([...profileImg, ...result.assets]);
+    }
+  };
+  const pickBanner = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      multiple: true,
+    });
+
+    if (!result.canceled) {
+      setBanner([...banner, ...result.assets]);
+    }
+  };
 
   return (
     <ScrollView>
@@ -182,7 +210,7 @@ export default function ProfilePage() {
                   placeholder="Username"
                   style={styles.input}
                   value={username}
-                  onChangeText={text => setUsername(text)}
+                  onChangeText={(text) => setUsername(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -191,7 +219,7 @@ export default function ProfilePage() {
                   placeholder="Name"
                   style={styles.input}
                   value={name}
-                  onChangeText={text => setName(text)}
+                  onChangeText={(text) => setName(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -200,7 +228,7 @@ export default function ProfilePage() {
                   placeholder="Email"
                   style={styles.input}
                   value={email}
-                  onChangeText={text => setEmail(text)}
+                  onChangeText={(text) => setEmail(text)}
                 />
               </View>
 
@@ -211,34 +239,68 @@ export default function ProfilePage() {
                   placeholder="Password"
                   style={styles.input}
                   value={password}
-                  onChangeText={text => setPassword(text)}
+                  onChangeText={(text) => setPassword(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.titleLabel}>Profile Image</Text>
-                <TextInput
-                  placeholder="Profile Image"
-                  style={styles.input}
-                  value={profileImg}
-                  onChangeText={text => setProfileImg(text)}
-                />
+                <Text style={styles.dua}>Profile Image</Text>
+                <TouchableOpacity style={styles.con} onPress={pickImage}>
+                  <Text style={{ textAlign: "center", paddingTop: 17 }}>
+                    {" "}
+                    Browse{" "}
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.titleLabel}>Banner</Text>
-                <TextInput
-                  placeholder="Banner"
-                  style={styles.input}
-                  value={banner}
-                  onChangeText={text => setBanner(text)}
-                />
+                <Text style={styles.dua}>Banner</Text>
+                <TouchableOpacity style={styles.con} onPress={pickBanner}>
+                  <Text style={{ textAlign: "center", paddingTop: 17 }}>
+                    {" "}
+                    Browse{" "}
+                  </Text>
+                </TouchableOpacity>
               </View>
+              <Text>{console.log()}</Text>
+              {profileImg.length > 0 && (
+                <View style={styles.resultContainer}>
+                  <FlatList
+                    data={profileImg}
+                    keyExtractor={(item) => item.uri}
+                    numColumns={3}
+                    renderItem={({ item }) => (
+                      <Image
+                        source={{ uri: item.uri }}
+                        style={styles.imageResult}
+                      />
+                    )}
+                  />
+                </View>
+              )}
+              {banner.length > 0 && (
+                <View style={styles.resultContainer}>
+                  <FlatList
+                    data={banner}
+                    keyExtractor={(item) => item.uri}
+                    numColumns={3}
+                    renderItem={({ item }) => {
+                      console.log(item.uri, "<<<<<<");
+                      return (
+                        <Image
+                          source={{ uri: item.uri }}
+                          style={styles.imageResult}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+              )}
               <View style={styles.inputContainer}>
                 <Text style={styles.titleLabel}>Note</Text>
                 <TextInput
                   placeholder="Note"
                   style={styles.input}
                   value={note}
-                  onChangeText={text => setNote(text)}
+                  onChangeText={(text) => setNote(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -247,7 +309,7 @@ export default function ProfilePage() {
                   placeholder="Phone Number"
                   style={styles.input}
                   value={phoneNum}
-                  onChangeText={text => setPhoneNum(text)}
+                  onChangeText={(text) => setPhoneNum(text)}
                 />
               </View>
 
@@ -255,7 +317,7 @@ export default function ProfilePage() {
                 <Text style={styles.titleLabel}>City</Text>
                 <Picker
                   selectedValue={city}
-                  onValueChange={itemValue => setCity(itemValue)}
+                  onValueChange={(itemValue) => setCity(itemValue)}
                   style={styles.dropdown}
                 >
                   <Picker.Item
@@ -342,7 +404,7 @@ export default function ProfilePage() {
             <Text style={styles.wumpa}>Post</Text>
             <View style={styles.grid}>
               {item.length > 0 &&
-                item.map(item => (
+                item.map((item) => (
                   <TouchableOpacity
                     onPress={() => handleItemPress(item)}
                     key={item.id}
@@ -362,6 +424,23 @@ export default function ProfilePage() {
 }
 
 const styles = StyleSheet.create({
+  resultContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  imageResult: {
+    width: "33.33%",
+    aspectRatio: 1,
+    margin: 2,
+  },
+  con: {
+    color: "#FFF8E7",
+    backgroundColor: "#7C67F2",
+    height: 50,
+    borderRadius: 12,
+    marginVertical: 10,
+    marginBottom: 60,
+  },
   dropdown: {
     height: 50,
     width: "100%",
@@ -381,6 +460,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 12,
+    marginLeft: 12,
+  },
+  dua: {
+    marginTop: 22,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "left",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
     marginLeft: 12,
   },
   cityStyle: {

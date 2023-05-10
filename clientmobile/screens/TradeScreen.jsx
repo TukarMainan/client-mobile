@@ -115,13 +115,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 15,
     backgroundColor: "#FFF",
+    marginTop:10
   },
   card: {
-    paddingTop: 10,
     width: 100,
     height: 100,
     margin: 10,
-    marginBottom: 120,
+    marginBottom: 125,
     marginLeft: 50,
   },
   description: {
