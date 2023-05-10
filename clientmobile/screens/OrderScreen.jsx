@@ -6,9 +6,12 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  Alert,
+  Modal
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import MapView, { Marker } from 'react-native-maps';
 
 const DATA = [
   {
@@ -59,8 +62,12 @@ const DATA = [
 
 
 
+
+
 export default function Trade({ route }) {
   //   const { item } = route.params;
+const [isVisible,setIsVisible]= useState(true)
+const [loc,setLoc] = useState({})
   const navigation = useNavigation();
   function handleAccept() {
     console.log("handle acc");
@@ -80,6 +87,19 @@ export default function Trade({ route }) {
   function handleChat(){
     navigation.navigate('Chat')
   }
+
+  // async function location(){ // api geopify
+  //   try {
+  //     const {data} = await axios.get(` https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=90b53ef2d7a44347866db01870984c32`)
+  //     setLoc({ address_line1: data.address_line1, address_line2: data.address_line2 });
+  //     return { address_line1: data.address_line1, address_line2: data.address_line2 };
+  //   } catch (error) {
+  //     Alert.alert(
+  //       "Cannot get the meeting point.",
+  //       [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+  //     );
+  //   }
+  // }
   return (
     <>
       <ScrollView>
@@ -126,6 +146,7 @@ export default function Trade({ route }) {
                     >
                       <Text style={styles.reject}>Chat User</Text>
                     </TouchableOpacity>
+                   
                   </View>
                 </View>
               </View>
@@ -133,6 +154,30 @@ export default function Trade({ route }) {
           })}
         </View>
       </ScrollView>
+      <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isVisible}
+    >
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'  }}>
+        <View style={{ backgroundColor: 'white', borderRadius: 10, borderWidth:1 ,paddingHorizontal:30}}>
+          <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10,textAlign:'center',marginTop:10 }}>YOUR TRADE REQUEST IS ACCEPTED</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10,textAlign:'center' }}>THIS IS YOUR MEETING POINT</Text>
+          <MapView style={{ height: 200, width: 300  }}>
+            <Marker coordinate={{ latitude: -6.121435,longitude: 106.774124 }} />
+          </MapView>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 ,marginBottom:20}}>
+            <TouchableOpacity onPress={() => setIsVisible(false)} style={{ backgroundColor: 'gray', borderRadius: 10, padding: 10 ,width:140}}>
+              <Text style={{ color: 'white',textAlign:'center' }}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsVisible(false)} style={{ backgroundColor: '#7C67F2', borderRadius: 10, padding: 10,width:140 }}>
+              <Text style={{ color: 'white',textAlign:'center' }}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+      
     </>
   );
 }
