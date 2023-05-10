@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet , Modal} from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Image,
+  StyleSheet,
+  Modal,
+} from "react-native";
 
 const ProfileModal = ({ isVisible, onClose }) => {
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [banner, setBanner] = useState('');
-  const [profileImg, setProfileImg] = useState('');
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [banner, setBanner] = useState("");
+  const [profileImg, setProfileImg] = useState("");
 
   return (
     <Modal isVisible={isVisible} onBackdropPress={onClose}>
@@ -78,12 +86,12 @@ const ProfileModal = ({ isVisible, onClose }) => {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
     padding: 16,
   },
   modalTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
     marginBottom: 16,
   },
@@ -91,12 +99,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   label: {
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontWeight: "bold",
+    marginBottom: 48,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 4,
     padding: 8,
   },

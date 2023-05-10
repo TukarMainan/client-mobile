@@ -161,10 +161,11 @@ export default function Home() {
     <>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image
+          {/* <Image source={Logo} style={styles.spinnerLogo} /> */}
+          {/* <Image
             source={require("../toys.png")}
             style={styles.backgroundImage}
-          />
+          /> */}
           <View style={styles.searchBar}>
             <TextInput
               style={styles.searchInput}
@@ -256,8 +257,8 @@ export default function Home() {
             </View>
           </ScrollView>
         </Modal>
-        <Text>Latitude: {console.log(location?.latitude)}</Text>
-        <Text>Latitude: {console.log(location?.longitude)}</Text>
+        {/* <Text>Latitude: {console.log(location?.latitude)}</Text>
+        <Text>Latitude: {console.log(location?.longitude)}</Text> */}
         <ScrollView>
           <Image
             source={{
@@ -346,6 +347,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingTop: 50,
     paddingBottom: 5,
+    backgroundColor: "#7C67F2",
   },
   backgroundImage: {
     position: "absolute",
@@ -393,7 +395,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#222",
+    backgroundColor: "#F68383",
     borderRadius: 10,
     marginHorizontal: 20,
     marginVertical: 10,
@@ -413,8 +415,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   spinnerLogo: {
-    width: 85,
-    height: 85,
+    width: 40,
+    height: 40,
   },
   gridList: {
     padding: 16,
@@ -496,7 +498,7 @@ const styles = StyleSheet.create({
   picker: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#B9BBB6",
+    backgroundColor: "#FFF8E7",
     borderRadius: 20,
     marginHorizontal: 20,
     marginVertical: 10,

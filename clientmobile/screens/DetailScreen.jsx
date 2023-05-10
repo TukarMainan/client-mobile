@@ -86,7 +86,7 @@ const DetailsPage = ({ route }) => {
     }).start();
   }, []);
 
-  const handleImagePress = (index) => {
+  const handleImagePress = index => {
     setSelectedImageIndex(index);
   };
 
@@ -156,12 +156,12 @@ const DetailsPage = ({ route }) => {
     console.log("handleStatus");
   }
 
-  const handleItemPress = (item) => {
+  const handleItemPress = item => {
     navigation.navigate("Detail", { item });
   };
 
   return (
-    <LinearGradient colors={["#A855F7", "#FFFFFF"]} style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.imageContainer}>
@@ -209,11 +209,11 @@ const DetailsPage = ({ route }) => {
           >
             <Text style={styles.tradeText}>Trade Toys</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tradeButton} onPress={handleDelete}>
-            <Text style={styles.tradeText}>Delete</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
             <Text style={styles.tradeText}>Set Inactive</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleDelete}>
+            <Text style={styles.tradeText}>Delete</Text>
           </TouchableOpacity>
 
           <View style={styles.header}>
@@ -235,7 +235,7 @@ const DetailsPage = ({ route }) => {
               </Text>
               <TouchableOpacity
                 style={styles.chatContainer}
-                onPress={(item) => handleChat(item)}
+                onPress={item => handleChat(item)}
               >
                 <Text style={styles.chat}>Chat Now</Text>
 
@@ -246,7 +246,7 @@ const DetailsPage = ({ route }) => {
 
           <View style={styles.containerr}>
             <View style={styles.box}>
-              <Text style={styles.title}>Description</Text>
+              {/* <Text style={styles.title}>Description</Text> */}
               <Text style={styles.title}>{item.name}</Text>
               <Text style={styles.description}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
@@ -272,7 +272,7 @@ const DetailsPage = ({ route }) => {
               <Text style={styles.commentsHeader}>Comments</Text>
 
               <View style={styles.commentContainerBack}>
-                {commentt.map((comment) => (
+                {commentt.map(comment => (
                   <View key={comment.id} style={styles.commentContainer}>
                     <Text style={styles.usernameComment}>Joko</Text>
                     <Text style={styles.commentText}>{comment}</Text>
@@ -283,23 +283,22 @@ const DetailsPage = ({ route }) => {
                     style={styles.textInputContainer}
                     placeholder="Add a comment..."
                     value={comment}
-                    onChangeText={(text) => setComment(text)}
+                    onChangeText={text => setComment(text)}
                   />
                   <TouchableOpacity>
-                    <Text style={styles.buttonText}>Submit</Text>
+                    <Text style={styles.buttonText}>Post</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
           <View style={styles.recommendContainer}>
-            <View style={styles.recommendTextContainer} >
-
-            <Text style={styles.recommendText}>Toys You May Like</Text>
+            <View style={styles.recommendTextContainer}>
+              <Text style={styles.recommendText}>Toys You May Like</Text>
             </View>
             <ScrollView horizontal={true}>
               <View style={styles.gridList}>
-                {DATA.map((item) => (
+                {DATA.map(item => (
                   <TouchableOpacity
                     onPress={() => handleItemPress(item)}
                     key={item.id}
@@ -312,14 +311,16 @@ const DetailsPage = ({ route }) => {
           </View>
         </ScrollView>
       </View>
-    </LinearGradient>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   recommendText: {
-    textAlign: "center",
-    fontSize: 20,
+    textAlign: "left",
+    fontSize: 28,
+    fontWeight: "bold",
+    marginLeft: 24,
   },
 
   recommendContainer: {
@@ -333,8 +334,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: "#FFF",
   },
-  recommendTextContainer:{
-  },
+  recommendTextContainer: {},
   gridList: {
     padding: 16,
     flexDirection: "row",
@@ -344,17 +344,27 @@ const styles = StyleSheet.create({
   },
   tradeButton: {
     borderColor: "#000000",
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#7C67F2",
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 80,
+    marginRight: 80,
+    marginTop: 20,
+    height: 40,
+  },
+  cancelButton: {
+    borderColor: "#000000",
+    backgroundColor: "#F68383",
+    borderRadius: 10,
+    marginLeft: 90,
+    marginRight: 90,
     marginTop: 20,
     height: 40,
   },
   tradeText: {
-    fontSize: 22,
+    fontSize: 18,
     textAlign: "center",
     paddingTop: 5,
+    color: "#fff",
   },
 
   label: {
@@ -368,18 +378,21 @@ const styles = StyleSheet.create({
     marginTop: 20,
     height: 200,
     width: 400,
-    borderRadius: 10,
-    backgroundColor: "#ecdff5",
+    borderRadius: 12,
+    backgroundColor: "#FFF8E7",
+    marginLeft: 16,
+    marginRight: 50,
   },
   map: {
     flex: 1,
   },
   title: {
-    color: "#000",
-    fontSize: 24,
+    color: "#444",
+    fontSize: 48,
     fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
+    marginBottom: 20,
+    textAlign: "left",
+    marginTop: 24,
   },
   chatContainer: {
     flexDirection: "row",
@@ -388,18 +401,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 90,
     borderWidth: 1,
+    backgroundColor: "#7C67F2",
   },
   chat: {
-    color: "#000",
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
+    padding: 6,
   },
   icon: {
     paddingTop: 3,
     width: 24,
     height: 24,
     paddingLeft: 5,
+    color: "#fff",
   },
   price: {
     fontSize: 18,
@@ -407,9 +423,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description: {
-    color: "#000",
+    color: "#555",
     fontSize: 16,
     lineHeight: 24,
+    marginBottom: 34,
   },
   textA: {
     fontSize: 40,
@@ -438,7 +455,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "#fff",
   },
   imageContainer: {
     flex: 1,
@@ -451,6 +468,9 @@ const styles = StyleSheet.create({
     // resizeMode: "contain",
     borderWidth: 5,
     borderColor: "#FFFF",
+    borderRadius: 18,
+    margin: 24,
+    // marginHorizontal: 50,
   },
   thumbnailContainer: {
     flexDirection: "row",
@@ -475,7 +495,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#FFF8E7",
     padding: 5,
     paddingBottom: 20,
     marginBottom: 5,
@@ -505,14 +525,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "bold",
-    paddingLeft:10
+    paddingLeft: 10,
   },
   bio: {
     fontSize: 16,
     marginTop: 5,
     marginBottom: 10,
-    marginLeft:10
-
+    marginLeft: 10,
   },
   statsContainer: {
     flexDirection: "row",
@@ -531,11 +550,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  // buttonText: {
+  //   color: "#fff",
+  //   fontSize: 16,
+  //   fontWeight: "bold",
+  // },
   content: {
     flex: 1,
     padding: 20,
@@ -545,14 +564,13 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FFFF",
     marginTop: 5,
-    borderRadius: 5,
-    borderBottomWidth:1
-
+    borderRadius: 3,
+    borderBottomWidth: 1,
   },
   inputCommentContainer: {
     flexDirection: "row",
     marginBottom: 10,
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#FFF8E7",
     borderRadius: 20,
     paddingLeft: 6,
   },
@@ -563,22 +581,20 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   buttonText: {
-    color: "#007AFF",
+    color: "#7C67F2",
     fontWeight: "bold",
     marginRight: 10,
     paddingTop: 9,
-    
   },
   commentContainer: {
     padding: 10,
     marginBottom: 10,
     borderRadius: 10,
     borderTopRightRadius: 3,
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#FFF8E7",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderTopLeftRadius: 20,
-    
   },
   commentText: {
     fontSize: 16,
@@ -586,8 +602,12 @@ const styles = StyleSheet.create({
   },
   commentsHeader: {
     borderTopWidth: 1,
-    textAlign: "center",
-    fontSize: 23,
+    textAlign: "left",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#444",
+    marginTop: 16,
+    marginBottom: 36,
   },
 });
 

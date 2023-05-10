@@ -270,39 +270,44 @@ export default function ProfilePage() {
                   <Picker.Item label="Philadelphia" value="Philadelphia" />
                 </Picker>
               </View>
-
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={handleCloseModal}
-              >
-                <Text
-                  onPress={handleUserInfo}
-                  style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    paddingTop: 10,
-                  }}
+              <View style={{ flex: 1, flexDirection: "column" }}>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={handleCloseModal}
                 >
-                  UPDATE
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => setIsModalOpen(false)}
-              >
-                <Text
-                  onPress={handleUserInfo}
-                  style={{
-                    textAlign: "center",
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    paddingTop: 10,
-                  }}
+                  <Text
+                    onPress={handleUserInfo}
+                    style={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      paddingTop: 10,
+                      color: "#FFF8E7",
+                      flex: 1,
+                    }}
+                  >
+                    Update
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={() => setIsModalOpen(false)}
                 >
-                  CLOSE
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    onPress={handleUserInfo}
+                    style={{
+                      textAlign: "center",
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      paddingTop: 10,
+                      color: "#FFF8E7",
+                      flex: 1,
+                    }}
+                  >
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </ScrollView>
           </Modal>
         </View>
@@ -371,11 +376,12 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 1,
+    marginBottom: 12,
+    marginLeft: 12,
   },
   cityStyle: {
     fontSize: 16,
@@ -413,10 +419,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 16,
-    backgroundColor: "#a06ccb",
+    backgroundColor: "#F68383",
     height: 50,
     borderRadius: 20,
-    marginHorizontal: 20,
+    marginHorizontal: 90,
     marginBottom: 15,
   },
   container: {
