@@ -67,7 +67,11 @@ const DATA = [
 export default function Trade({ route }) {
   //   const { item } = route.params;
 const [isVisible,setIsVisible]= useState(true)
-const [loc,setLoc] = useState({})
+const [loc,setLoc] = useState({
+  latitude: -6.121435,
+  longitude: 106.774124
+})
+
   const navigation = useNavigation();
   function handleAccept() {
     console.log("handle acc");
@@ -81,6 +85,7 @@ const [loc,setLoc] = useState({})
   };
 
   function handleComplete(){
+    navigation.navigate("Review");
     console.log('complete');
   }
 
@@ -163,8 +168,13 @@ const [loc,setLoc] = useState({})
         <View style={{ backgroundColor: 'white', borderRadius: 10, borderWidth:1 ,paddingHorizontal:30}}>
           <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10,textAlign:'center',marginTop:10 }}>YOUR TRADE REQUEST IS ACCEPTED</Text>
           <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10,textAlign:'center' }}>THIS IS YOUR MEETING POINT</Text>
-          <MapView style={{ height: 200, width: 300  }}>
-            <Marker coordinate={{ latitude: -6.121435,longitude: 106.774124 }} />
+          <MapView style={{ height: 200, width: 300  } } region={{
+                latitude: loc.latitude,
+                longitude: loc.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+            <Marker coordinate={loc} />
           </MapView>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 ,marginBottom:20}}>
             <TouchableOpacity onPress={() => setIsVisible(false)} style={{ backgroundColor: 'gray', borderRadius: 10, padding: 10 ,width:140}}>
