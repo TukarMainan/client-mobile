@@ -186,10 +186,14 @@ export default function ProfilePage() {
             </Text>
           </View>
           <Text style={styles.username}>William</Text>
-          <View style={styles.iconStyle}>
-            <Icon name="map-marker-outline" size={24} />
+          <View style={{ flex: 1,flexDirection:'row'}}>
+            <View style={{ width:30 , paddingLeft:7}}>
+              <Icon name="map-marker-outline" size={30} />
+            </View>
+            <View style={{ flex: 1}}>
+              <Text style={styles.cityStyle}>Around Jakarta</Text>
+            </View>
           </View>
-          <Text style={styles.cityStyle}>Around Jakarta</Text>
           {/* {note &&  */}
           {/* <Text style={styles.wumpa}>Barter sama gua dijamin JOSS!</Text> */}
           {/* } */}
@@ -473,8 +477,8 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cityStyle: {
-    fontSize: 16,
-    marginLeft: 18,
+    fontSize: 20,
+    marginLeft: 10,
   },
   modalContainer: {
     backgroundColor: "#fff",
@@ -554,12 +558,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
   },
   iconStyle: {
+    flex: 1,
+
     marginLeft: 12,
     marginTop: 6,
   },
   username: {
+    flex: 1,
     fontWeight: "bold",
-    marginLeft: 12,
+    marginLeft: 9,
     fontSize: 48,
     marginBottom: 5,
     textAlign: "left",
