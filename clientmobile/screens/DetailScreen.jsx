@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
-import { fetchPostDetail } from "../stores/actions/actionCreator";
+// import { connect } from "react-redux";
+// import { fetchPostDetail } from "../stores/actions/actionCreator";
+import axios from "axios";
 import {
     StyleSheet,
     View,
@@ -21,18 +22,19 @@ import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import StarRating from "react-native-star-rating";
 import NearbyCard from "../components/NearbyCard";
+import { BASE_URL } from "../config/api";
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchPostDetail: (id) => dispatch(fetchPostDetail(id)),
-    };
-};
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         fetchPostDetail: (id) => dispatch(fetchPostDetail(id)),
+//     };
+// };
 
-const mapStateToProps = (state) => {
-    return {
-        postDetail: state.postDetail,
-    };
-};
+// const mapStateToProps = (state) => {
+//     return {
+//         postDetail: state.postDetail,
+//     };
+// };
 
 const DATA_ITEMS_YOU_MAY_LIKE = [
     {
@@ -81,9 +83,22 @@ const DATA_ITEMS_YOU_MAY_LIKE = [
     },
 ];
 
-const DetailsPage = ({ route, postDetail, fetchPostDetail }) => {
+const DetailsPage = ({ route }) => {
     const { id } = route.params;
-    const { loading: isLoading, postDetail: postDetailData } = postDetail;
+    const [isLoading, setIsLoading] = useState(true);
+    const [postDetailData, setPostDetailData] = useState({});
+    // const { loading: isLoading, postDetail: postDetailData } = postDetail;
+
+    async function fetchPostDetail(id) {
+        try {
+            const { data } = await axios.get(BASE_URL + "/public/posts/" + id);
+            setPostDetailData(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
         fetchPostDetail(id);
@@ -94,15 +109,9 @@ const DetailsPage = ({ route, postDetail, fetchPostDetail }) => {
         }).start();
     }, []);
 
-    console.log(isLoading, postDetailData?.User.ratings);
-
-    let ratingsAverageScore = 0;
-    if (postDetailData?.User.ratings.length > 1) {
-        const sum = postDetailData?.User.ratings
-            .slice(1)
-            .reduce((acc, val) => acc + val, 0);
-        ratingsAverageScore = sum / (postDetailData?.User.ratings.length - 1);
-    }
+    useEffect(() => {
+        console.log(isLoading, postDetailData);
+    }, [isLoading]);
 
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [comment, setComment] = useState("");
@@ -203,6 +212,15 @@ const DetailsPage = ({ route, postDetail, fetchPostDetail }) => {
         );
     }
 
+    let ratingsAverageScore = 0;
+    if (postDetailData?.User.ratings.length > 1) {
+        let sum = postDetailData?.User.ratings
+            .slice(1)
+            .reduce((acc, val) => acc + val, 0);
+        ratingsAverageScore = sum / (postDetailData?.User.ratings.length - 1);
+    }
+
+    // return <Text>STOOOOOOPPPPPPPP</Text>;
     return (
         <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
             <View style={styles.container}>
@@ -688,4 +706,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsPage);
+export default DetailsPage;
