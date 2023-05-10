@@ -15,7 +15,54 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 import StarRating from "react-native-star-rating";
-import { func } from "prop-types";
+import NearbyCard from "../components/NearbyCard";
+
+const DATA = [
+  {
+    id: "1",
+    name: "Item 1",
+    city: "Houston",
+    review: 5,
+    images: [
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+
+      "https://images.unsplash.com/photo-1682685797828-d3b2561deef4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+    ],
+  },
+  {
+    id: "2",
+    name: "Item 2",
+    city: "New York",
+    review: 3,
+    images: [
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    ],
+  },
+  {
+    id: "3",
+    name: "Item 3",
+    city: "Chicago",
+    review: 4,
+    images: [
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    ],
+  },
+  {
+    id: "4",
+    name: "Item 4",
+    city: "Los Angeles",
+    review: 5,
+    images: [
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+
+      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    ],
+  },
+];
 
 const DetailsPage = ({ route }) => {
   const { item } = route.params;
@@ -24,8 +71,8 @@ const DetailsPage = ({ route }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [meetingPoint, setMeetingPoint] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: -6.186486,
+    longitude: 106.834091,
   });
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -102,12 +149,16 @@ const DetailsPage = ({ route }) => {
   //     });
   // };
 
-  function handleDelete(){
-    console.log('handleDelete');
+  function handleDelete() {
+    console.log("handleDelete");
   }
-  function handleStatus(){
-    console.log('handleStatus');
+  function handleStatus() {
+    console.log("handleStatus");
   }
+
+  const handleItemPress = (item) => {
+    navigation.navigate("Detail", { item });
+  };
 
   return (
     <LinearGradient colors={["#A855F7", "#FFFFFF"]} style={{ flex: 1 }}>
@@ -146,9 +197,6 @@ const DetailsPage = ({ route }) => {
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                 }}
-                onPress={(event) =>
-                  setMeetingPoint(event.nativeEvent.coordinate)
-                }
               >
                 <Marker coordinate={meetingPoint} />
               </MapView>
@@ -161,20 +209,13 @@ const DetailsPage = ({ route }) => {
           >
             <Text style={styles.tradeText}>Trade Toys</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.tradeButton}
-            onPress={handleDelete}
-          >
+          <TouchableOpacity style={styles.tradeButton} onPress={handleDelete}>
             <Text style={styles.tradeText}>Delete</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.tradeButton}
-            onPress={handleStatus}
-          >
+          <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
             <Text style={styles.tradeText}>Set Inactive</Text>
           </TouchableOpacity>
 
-          
           <View style={styles.header}>
             <View style={styles.avatarContainer}>
               <Image source={require("../toys.png")} style={styles.avatar} />
@@ -251,6 +292,24 @@ const DetailsPage = ({ route }) => {
               </View>
             </View>
           </View>
+          <View style={styles.recommendContainer}>
+            <View style={styles.recommendTextContainer} >
+
+            <Text style={styles.recommendText}>Toys You May Like</Text>
+            </View>
+            <ScrollView horizontal={true}>
+              <View style={styles.gridList}>
+                {DATA.map((item) => (
+                  <TouchableOpacity
+                    onPress={() => handleItemPress(item)}
+                    key={item.id}
+                  >
+                    <NearbyCard key={item.id} item={item} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
         </ScrollView>
       </View>
     </LinearGradient>
@@ -258,6 +317,31 @@ const DetailsPage = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  recommendText: {
+    textAlign: "center",
+    fontSize: 20,
+  },
+
+  recommendContainer: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#FFF",
+  },
+  recommendTextContainer:{
+  },
+  gridList: {
+    padding: 16,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    paddingLeft: 5,
+    justifyContent: "space-between",
+  },
   tradeButton: {
     borderColor: "#000000",
     backgroundColor: "#ecdff5",
@@ -281,7 +365,7 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     //map container
-    marginTop:20,
+    marginTop: 20,
     height: 200,
     width: 400,
     borderRadius: 10,
@@ -295,7 +379,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign:'center'
+    textAlign: "center",
   },
   chatContainer: {
     flexDirection: "row",
@@ -343,7 +427,6 @@ const styles = StyleSheet.create({
     //container description
     backgroundColor: "#FFFF",
     padding: 20,
-    borderRadius: 10,
   },
   text: {
     color: "white",
@@ -418,16 +501,18 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: 5,
-
   },
   name: {
     fontSize: 20,
     fontWeight: "bold",
+    paddingLeft:10
   },
   bio: {
     fontSize: 16,
     marginTop: 5,
     marginBottom: 10,
+    marginLeft:10
+
   },
   statsContainer: {
     flexDirection: "row",
@@ -461,6 +546,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFF",
     marginTop: 5,
     borderRadius: 5,
+    borderBottomWidth:1
+
   },
   inputCommentContainer: {
     flexDirection: "row",
@@ -480,6 +567,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 10,
     paddingTop: 9,
+    
   },
   commentContainer: {
     padding: 10,
@@ -490,13 +578,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     borderTopLeftRadius: 20,
+    
   },
   commentText: {
     fontSize: 16,
     color: "#000000",
   },
   commentsHeader: {
-    borderTopWidth:1,
+    borderTopWidth: 1,
     textAlign: "center",
     fontSize: 23,
   },

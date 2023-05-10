@@ -76,6 +76,7 @@ export default function Trade({ route }) {
           {DATA?.map((item) => {
             return (
               <View style={styles.cardContainer} key={item.id}>
+                
                 <View style={styles.card}>
                   <Card item={item} key={item.id} />
                 </View>
@@ -113,14 +114,14 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 15,
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#FFF",
   },
   card: {
     paddingTop: 10,
     width: 100,
     height: 100,
     margin: 10,
-    marginBottom: 100,
+    marginBottom: 120,
     marginLeft: 50,
   },
   description: {

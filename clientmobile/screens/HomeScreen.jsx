@@ -26,6 +26,7 @@ const DATA = [
     name: "Item 1",
     city: "Houston",
     review: 5,
+    category:'Neutral',
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
@@ -36,6 +37,8 @@ const DATA = [
     id: "2",
     name: "Item 2",
     city: "New York",
+    category:'Girls',
+
     review: 3,
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
@@ -48,6 +51,7 @@ const DATA = [
     name: "Item 3",
     city: "Chicago",
     review: 4,
+    category:'Boys',
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
@@ -58,6 +62,8 @@ const DATA = [
     id: "4",
     name: "Item 4",
     city: "Los Angeles",
+    category:'Boys',
+
     review: 5,
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
@@ -263,6 +269,9 @@ export default function Home() {
           </View>
           <View>
             <ScrollView>
+            <View style={styles.box}>
+              <Text style={styles.recommendation}>Toys</Text>
+            </View>
               {searchQuery.length > 0 ? (
                 <View style={styles.cardContainer}>
                   {searchQuery.map((item) => (
@@ -309,10 +318,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+
   },
   card: {
     maxWidth: "45%",
-    width: "100%",
     margin: 7,
   },
   header: {

@@ -144,9 +144,16 @@ export default function ProfilePage() {
           {/* {note &&  */}
           <Text style={styles.username}>Barter sama gua dijamin JOSS!</Text>
           {/* } */}
-          <Text style={styles.description} onPress={handleOpenModal}>
-            Edit your personal information.
-          </Text>
+          <TouchableOpacity style={{flex:1,flexDirection:'row'}} onPress={() => setIsModalOpen(true)} >
+            <View style={{flex:1}} >
+              <Text style={{flex:1,fontSize:20,fontWeight:'400',paddingTop:10,marginLeft:130}} onPress={handleOpenModal}>
+                Edit profile
+              </Text>
+            </View>
+            <View style={{marginRight:120,paddingTop:8}} >
+              <Icon name="pencil" size={25} />
+            </View>
+          </TouchableOpacity>
 
           <View style={styles.iconStyle}>
             <Icon name="map-marker-outline" size={40} />
@@ -229,7 +236,6 @@ export default function ProfilePage() {
                   onChangeText={(text) => setPhoneNum(text)}
                 />
               </View>
-         
 
               <View style={styles.inputContainer}>
                 <Text style={styles.titleLabel}>City</Text>
@@ -251,9 +257,12 @@ export default function ProfilePage() {
                 </Picker>
               </View>
 
-              <View style={styles.buttonContainer}>
-                <Button title="Post" onPress={handleUserInfo} />
-              </View>
+              <TouchableOpacity style={styles.buttonContainer}  onPress={handleCloseModal}>
+                <Text onPress={handleUserInfo} style={{textAlign:'center',fontSize:20,fontWeight:'bold',paddingTop:10}} >UPDATE</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonContainer} onPress={()=>  setIsModalOpen(false)} >
+                <Text onPress={handleUserInfo} style={{textAlign:'center',fontSize:20,fontWeight:'bold',paddingTop:10}} >CLOSE</Text>
+              </TouchableOpacity>
             </ScrollView>
           </Modal>
         </View>
@@ -319,15 +328,15 @@ const styles = StyleSheet.create({
     marginBottom: 31,
   },
   titleLabel: {
-  paddingTop:15,
-  fontSize: 18,
-  fontWeight: "bold",
-  textAlign: "center",
-  borderRadius: 20,
-  alignItems: "center",
-  justifyContent: "center",
-  marginBottom: 1,
-},
+    paddingTop: 15,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 1,
+  },
   cityStyle: {
     fontSize: 20,
   },
@@ -359,10 +368,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 15,
     paddingBottom: 10,
-    height:40
+    height: 40,
   },
   buttonContainer: {
     marginTop: 16,
+    backgroundColor:'#a06ccb',
+    height:50,
+    borderRadius:20,
+    marginHorizontal:20,
+    marginBottom:15
   },
   container: {
     flex: 1,
