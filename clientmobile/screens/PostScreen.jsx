@@ -117,7 +117,7 @@ export default function Post() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       setImageCam(prevImages => [...prevImages, photo]);
-
+      console.log('masuk sini');
       setShowPreview(true);
     }
   };
@@ -145,21 +145,17 @@ export default function Post() {
   };
 
   const savePicture = async () => {
-    try {
-      const fileUri = FileSystem.documentDirectory;
-      await FileSystem.moveAsync({
-        from: imageUri,
-        to: fileUri,
-      });
-      setStoredUri(fileUri);
-      await AsyncStorage.setItem("imageUri", fileUri);
-    } catch (e) {
-      console.log(e);
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setImageCam(prevImages => [...prevImages, photo]);
+      console.log('masuk save');
+      setShowPreview(false);
+      setShowCamera(false)
     }
   };
 
   function handleRetake() {
-    setImageCam(false);
+    setImageCam([]);
     setShowPreview(false);
   }
 
@@ -257,20 +253,22 @@ export default function Post() {
             Take a picture
           </Text>
         </TouchableOpacity>
-
+        <View>
+          
         {image.length > 0 && (
           <View style={styles.resultContainer}>
             <FlatList
               data={image}
               keyExtractor={item => item.uri}
               numColumns={3}
-              renderItem={({ item }) => (
-                <Image source={{ uri: item.uri }} style={styles.imageResult} />
-              )}
+              renderItem={({ item }) => {
+               return <Image source={{ uri: item.uri }} style={styles.imageResult} />
+              }}
             />
           </View>
         )}
-        <Text>{/* {console.log(imageCam)} */}</Text>
+        </View>
+        <View>
         {imageCam.length > 0 && (
           <View style={styles.resultContainer}>
             <FlatList
@@ -278,7 +276,6 @@ export default function Post() {
               keyExtractor={item => item.uri}
               numColumns={3}
               renderItem={({ item }) => {
-                console.log(item.uri, "<<<<<<");
                 return (
                   <Image
                     source={{ uri: item.uri }}
@@ -289,6 +286,7 @@ export default function Post() {
             />
           </View>
         )}
+        </View>
 
         <View style={styles.mapContainer}>
           <Text style={styles.label}>Meeting Point</Text>
@@ -346,7 +344,9 @@ export default function Post() {
       </Modal>
       <Modal visible={showPreview} animationType="slide">
         <View style={styles.preview}>
-          <Image source={{ uri: imageCam }} style={styles.previewImage} />
+          {imageCam.map(img => {
+            return <Image source={{ uri: img.uri }} style={styles.previewImage} />
+          })}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.retakeTouch} onPress={handleRetake}>
               <Text style={styles.textRetake}>Retake</Text>
@@ -529,12 +529,14 @@ const styles = StyleSheet.create({
     height: 90,
   },
   input: {
-    borderRadius: 1,
+    borderRadius: 5,
     marginBottom: 20,
     fontSize: 16,
     // paddingLeft: 15,
     // paddingBottom: 10,
     backgroundColor: "#fff",
+    paddingBottom:10,
+    marginLeft:8,
     // height: 40,
   },
 

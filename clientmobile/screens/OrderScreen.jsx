@@ -57,6 +57,8 @@ const DATA = [
   },
 ];
 
+
+
 export default function Trade({ route }) {
   //   const { item } = route.params;
   const navigation = useNavigation();
@@ -66,6 +68,18 @@ export default function Trade({ route }) {
   function handleReject() {
     console.log("handleReject");
   }
+
+  const handleItemPress = (item) => {
+    navigation.navigate("Detail", { item });
+  };
+
+  function handleComplete(){
+    console.log('complete');
+  }
+
+  function handleChat(){
+    navigation.navigate('Chat')
+  }
   return (
     <>
       <ScrollView>
@@ -73,9 +87,9 @@ export default function Trade({ route }) {
           {DATA?.map(item => {
             return (
               <View style={styles.cardContainer} key={item.id}>
-                <View style={styles.card}>
+                <TouchableOpacity style={styles.card} onPress={() => handleItemPress(item)} >
                   <Card item={item} key={item.id} />
-                </View>
+                </TouchableOpacity>
 
                 <View style={styles.containerFill}>
                   <View style={styles.descContain}>
@@ -97,6 +111,20 @@ export default function Trade({ route }) {
                       onPress={handleReject}
                     >
                       <Text style={styles.reject}>Reject</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.containerButton}>
+                    <TouchableOpacity
+                      style={styles.description}
+                      onPress={handleComplete}
+                    >
+                      <Text style={styles.font}>Complete</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.description}
+                      onPress={handleChat}
+                    >
+                      <Text style={styles.reject}>Chat User</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -143,8 +171,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     // marginBottom: 10,
-    marginLeft: 12,
-    marginRight: 12,
+    marginRight: 200,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -156,19 +183,22 @@ const styles = StyleSheet.create({
     // marginBottom: 15,
     marginBottom: 15,
     backgroundColor: "#FFF",
+    paddingRight: 40,
+    paddingLeft:10
+
   },
   containerButton: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginRight: 100,
     paddingRight: 200,
     height: 1,
     paddingTop: 30,
-    paddingLeft: 10,
+    paddingRight: 40,
   },
 
   card: {
-    // paddingTop: 10,
+    marginTop:10,
+
     // width: 100,
     // height: 100,
     // margin: 10,
@@ -181,8 +211,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "#7C67F2",
     height: 30,
-    marginTop: 20,
-    marginRight: 4,
+    marginTop: 25,
+    marginRight: 10,
     marginLeft: 8,
   },
   font: {
