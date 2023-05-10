@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  Modal,
-  RadioGroup,
-  RadioButton,
+    View,
+    Text,
+    Image,
+    TextInput,
+    FlatList,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView,
+    SafeAreaView,
+    Modal,
+    RadioGroup,
+    RadioButton,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Card from "../components/Card";
@@ -21,141 +22,153 @@ import Logo from "../logo.png";
 import NearbyCard from "../components/NearbyCard";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
+import { fetchPosts } from "../stores/actions/actionCreator";
 
 const DATA = [
-  {
-    id: "1",
-    name: "Item 1",
-    city: "Houston",
-    review: 5,
-    category: "Neutral",
-    images: [
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    {
+        id: "1",
+        name: "Item 1",
+        city: "Houston",
+        review: 5,
+        category: "Neutral",
+        images: [
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
-      "https://images.unsplash.com/photo-1682685797828-d3b2561deef4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-    ],
-  },
-  {
-    id: "2",
-    name: "Item 2",
-    city: "New York",
-    category: "Girls",
+            "https://images.unsplash.com/photo-1682685797828-d3b2561deef4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+        ],
+    },
+    {
+        id: "2",
+        name: "Item 2",
+        city: "New York",
+        category: "Girls",
 
-    review: 3,
-    images: [
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        review: 3,
+        images: [
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    ],
-  },
-  {
-    id: "3",
-    name: "Item 3",
-    city: "Chicago",
-    review: 4,
-    category: "Boys",
-    images: [
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        ],
+    },
+    {
+        id: "3",
+        name: "Item 3",
+        city: "Chicago",
+        review: 4,
+        category: "Boys",
+        images: [
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    ],
-  },
-  {
-    id: "4",
-    name: "Item 4",
-    city: "Los Angeles",
-    category: "Boys",
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        ],
+    },
+    {
+        id: "4",
+        name: "Item 4",
+        city: "Los Angeles",
+        category: "Boys",
 
-    review: 5,
-    images: [
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        review: 5,
+        images: [
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
-      "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    ],
-  },
+            "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+        ],
+    },
 ];
 
 const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
 const categories = ["Technology", "Fashion", "Food", "Travel", "Sports"];
 const sortOptions = ["Newest", "Oldest"];
 const conditions = [
-  "brand new",
-  "like new",
-  "lightly used",
-  "well used",
-  "heavily used",
+    "brand new",
+    "like new",
+    "lightly used",
+    "well used",
+    "heavily used",
 ];
 
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedCity, setSelectedCity] = useState(cities[0]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useState(null);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchPosts: () => dispatch(fetchPosts()),
+    };
+};
 
-  useEffect(() => {
-    setIsLoading(true);
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts,
+    };
+};
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+function Home({ posts, fetchPosts }) {
+    const { loading: isLoading, posts: postsData } = posts;
+    const [isVisible, setIsVisible] = useState(false);
+    const [selectedCity, setSelectedCity] = useState(cities[0]);
+    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [location, setLocation] = useState(null);
 
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        // Handle permission not granted error
-        return;
-      }
+    useEffect(() => {
+        fetchPosts();
 
-      let { coords } = await Location.getCurrentPositionAsync({});
-      setLocation(coords);
-    })();
-  }, []);
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                // Handle permission not granted error
+                return;
+            }
 
-  if (isLoading) {
-    return (
-      <View style={styles.spinnerContainer}>
-        <Spinner
-          visible={isLoading}
-          customIndicator={
-            <Animatable.View animation="bounce" iterationCount="infinite">
-              <Image source={Logo} style={styles.spinnerLogo} />
-            </Animatable.View>
-          }
-          overlayColor="rgba(0, 0, 0, 0.5)"
-        />
-      </View>
-    );
-  }
+            let { coords } = await Location.getCurrentPositionAsync({});
+            setLocation(coords);
+        })();
+    }, []);
 
-  const navigation = useNavigation();
+    if (isLoading) {
+        return (
+            <View style={styles.spinnerContainer}>
+                <Spinner
+                    visible={isLoading}
+                    customIndicator={
+                        <Animatable.View
+                            animation="bounce"
+                            iterationCount="infinite"
+                        >
+                            <Image source={Logo} style={styles.spinnerLogo} />
+                        </Animatable.View>
+                    }
+                    overlayColor="rgba(0, 0, 0, 0.5)"
+                />
+            </View>
+        );
+    }
 
-  const handleItemPress = item => {
-    navigation.navigate("Detail", { item });
-  };
+    const navigation = useNavigation();
 
-  const handleCityChange = city => {
-    setSelectedCity(city);
-  };
+    const handleItemPress = (item) => {
+        navigation.navigate("Detail", { item });
+    };
 
-  const handleCategoryChange = category => {
-    setSelectedCategory(category);
-  };
+    const handleCityChange = (city) => {
+        setSelectedCity(city);
+    };
 
-  const handleSortChange = sort => {
-    setSelectedSort(sort);
-  };
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+    };
 
-  const handleSearch = text => {
-    const newData = DATA.filter(item => {
-      const itemData = item.name.toLowerCase();
-      const searchText = text.toLowerCase();
-      return itemData.indexOf(searchText) > -1;
-    });
-    setSearchQuery(newData);
-  };
+    const handleSortChange = (sort) => {
+        setSelectedSort(sort);
+    };
+
+    const handleSearch = (text) => {
+        const newData = DATA.filter((item) => {
+            const itemData = item.name.toLowerCase();
+            const searchText = text.toLowerCase();
+            return itemData.indexOf(searchText) > -1;
+        });
+        setSearchQuery(newData);
+    };
 
   return (
     <>
@@ -267,61 +280,73 @@ export default function Home() {
             style={styles.banner}
           />
 
-          <View style={styles.recommendationContainer}>
-            {/* <View style={styles.box}> */}
-            <Text style={styles.recommendation}>Toys Nearby</Text>
-            {/* </View> */}
-            <ScrollView horizontal={true}>
-              <View style={styles.gridList}>
-                {DATA.map(item => (
-                  <TouchableOpacity
-                    onPress={() => handleItemPress(item)}
-                    key={item.id}
-                  >
-                    <NearbyCard key={item.id} item={item} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-          <View>
-            <ScrollView>
-              <View style={styles.box}>
-                <Text style={styles.wumpa}>Explore</Text>
-              </View>
-              {searchQuery.length > 0 ? (
-                <View style={styles.cardContainer}>
-                  {searchQuery.map(item => (
-                    <TouchableOpacity
-                      onPress={() => handleItemPress(item)}
-                      key={item.id}
-                    >
-                      <View style={styles.card}>
-                        <Card key={item.id} item={item} />
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              ) : (
-                <View style={styles.cardContainer}>
-                  {DATA.map(item => (
-                    <TouchableOpacity
-                      onPress={() => handleItemPress(item)}
-                      key={item.id}
-                    >
-                      <View style={styles.card}>
-                        <Card key={item.id} item={item} />
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              )}
-            </ScrollView>
-          </View>
-        </ScrollView>
-      </View>
-    </>
-  );
+                    <View style={styles.recommendationContainer}>
+                        {/* <View style={styles.box}> */}
+                        <Text style={styles.recommendation}>Toys Nearby</Text>
+                        {/* </View> */}
+                        <ScrollView horizontal={true}>
+                            <View style={styles.gridList}>
+                                {DATA.map((item) => (
+                                    <TouchableOpacity
+                                        onPress={() => handleItemPress(item)}
+                                        key={item.id}
+                                    >
+                                        <NearbyCard key={item.id} item={item} />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </ScrollView>
+                    </View>
+                    <View>
+                        <ScrollView>
+                            <View style={styles.box}>
+                                <Text style={styles.wumpa}>Explore</Text>
+                            </View>
+                            {searchQuery.length > 0 ? (
+                                <View style={styles.cardContainer}>
+                                    {searchQuery.map((item) => (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                handleItemPress(item)
+                                            }
+                                            key={item.id}
+                                        >
+                                            <View style={styles.card}>
+                                                <Card
+                                                    key={item.id}
+                                                    item={item}
+                                                />
+                                            </View>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            ) : (
+                                <View style={styles.cardContainer}>
+                                    {postsData?.map((item) => {
+                                        return (
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    handleItemPress(item)
+                                                }
+                                                key={item.id}
+                                            >
+                                                <View style={styles.card}>
+                                                    <Card
+                                                        key={item.id}
+                                                        item={item}
+                                                    />
+                                                </View>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </View>
+                            )}
+                        </ScrollView>
+                    </View>
+                </ScrollView>
+            </View>
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -518,3 +543,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
