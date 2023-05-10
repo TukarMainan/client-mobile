@@ -76,7 +76,7 @@ const DetailsPage = ({ route }) => {
   });
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const commentt = ["Haloo jink", "Jual beli organ tubuh"];
+  const commentt = ["Aku cinta hacktiv8", "TukarMainan Jaya jaya jaya ..."];
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
