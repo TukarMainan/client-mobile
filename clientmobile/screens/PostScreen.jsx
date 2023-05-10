@@ -242,8 +242,18 @@ export default function Post() {
           </Picker>
         </View>
 
-        <TouchableOpacity style={styles.container}>
-          <Button title="Pick an image from your gallery" onPress={pickImage} />
+        <TouchableOpacity style={styles.con} onPress={pickImage}>
+          <Text style={{ textAlign: "center", paddingTop: 17 }}> Browse </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.con}
+          onPress={() => {
+            setShowCamera(true);
+          }}
+        >
+          <Text style={{ textAlign: "center", paddingTop: 17 }}>
+            Take a picture
+          </Text>
         </TouchableOpacity>
         {image.length > 0 && (
           <View>
@@ -256,40 +266,6 @@ export default function Post() {
             ))}
           </View>
         )}
-        {/* <Text>{console.log(imageCam, "<<<")}</Text> */}
-        {/* {imageCam && (
-          <View style={styles.imageContainer}>
-           
-            <Image source={{ uri: imageCam }} style={styles.image} />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button} onPress={savePicture}>
-                <Text style={styles.buttonText}>Use Picture</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={resetImageUri}>
-                <Text style={styles.buttonText}>Retake Picture</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )} */}
-        {/* {imageCam.length > 0 && (
-        <View>
-          {imageCam.map((img) => (
-            <Image
-              key={img.uri}
-              source={{ uri: img.uri }}
-              style={{ width: 200, height: 200 }}
-            />
-          ))}
-        </View>
-      )} */}
-        <TouchableOpacity style={styles.container}>
-          <Button
-            title="Take a picture"
-            onPress={() => {
-              setShowCamera(true);
-            }}
-          />
-        </TouchableOpacity>
 
         <View style={styles.mapContainer}>
           <Text style={styles.label}>Meeting Point</Text>
@@ -309,9 +285,9 @@ export default function Post() {
           </View>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <Button title="Post" onPress={handlePost} />
-        </View>
+        <TouchableOpacity style={styles.conPost} onPress={handlePost}>
+          <Text style={{ textAlign: "center", paddingTop: 17 }}>Post</Text>
+        </TouchableOpacity>
       </ScrollView>
       <Modal visible={showCamera} animationType="slide">
         {showCamera && !imageUri && (
@@ -321,14 +297,20 @@ export default function Post() {
             ref={(ref) => (cameraRef = ref)}
           >
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.buttonCam} onPress={flipCamera}>
+              <TouchableOpacity
+                style={[styles.buttonCam, styles.buttonMargin]}
+                onPress={flipCamera}
+              >
                 <Text style={styles.buttonText}>Flip</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonCam} onPress={takePicture}>
+              <TouchableOpacity
+                style={[styles.buttonCam, styles.buttonMargin]}
+                onPress={takePicture}
+              >
                 <Text style={styles.buttonText}>Take Picture</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.buttonCam}
+                style={[styles.buttonCam, styles.buttonMargin]}
                 onPress={() => {
                   setShowCamera(false);
                 }}
@@ -357,26 +339,40 @@ export default function Post() {
 }
 
 const styles = StyleSheet.create({
-  preview: {
+  conPost: {
     backgroundColor: "#e39ff6",
-  },
-
-  retakeTouch: {
-    backgroundColor: "#f5f5d1",
-    flex: 1,
-    borderRadius: 30,
     height: 50,
+    borderRadius: 20,
+    marginVertical: 10,
+    marginBottom: 20,
+  },
+  con: {
+    backgroundColor: "#e39ff6",
+    height: 50,
+    borderRadius: 20,
+    marginVertical: 10,
+    marginBottom: 20,
+  },
+  retakeTouch: {
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
   },
   textRetake: {
-    fontSize: 30,
+    fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
-    alignContent: "center",
+    color: "#000",
+  },
+  preview: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   previewImage: {
+    flex: 1,
     width: "100%",
-    height: "85%",
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   image: {
     width: 300,
@@ -386,6 +382,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fff",
+    paddingBottom: 15,
   },
   camera: {
     flex: 1,
@@ -464,7 +461,6 @@ const styles = StyleSheet.create({
   },
   descAI: {
     marginBottom: 30,
-    borderWidth: 1,
     borderRadius: 40,
     textAlign: "center",
     alignItems: "center",
@@ -503,15 +499,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 15,
     paddingBottom: 10,
-    height:40
+    height: 40,
   },
 
-  buttonContainer: {
-    backgroundColor: "#FFFF",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 10,
-  },
   button: {
     backgroundColor: "#000000",
     paddingVertical: 12,
@@ -609,16 +599,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
-    marginTop: 50,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: 30,
+    paddingHorizontal: 20,
+    backgroundColor: "transparent",
   },
   buttonCam: {
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#000",
+  },
+  buttonMargin: {
+    marginHorizontal: 10,
   },
 });

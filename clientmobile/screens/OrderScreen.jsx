@@ -96,7 +96,7 @@ export default function Trade({ route }) {
                       style={styles.description}
                       onPress={handleReject}
                     >
-                      <Text style={styles.font}>Reject</Text>
+                      <Text style={styles.reject}>Reject</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     marginBottom: 15,
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#FFF",
   },
   containerButton: {
-    flexDirection: "row",
-   
+    flexDirection: 'row',
+    justifyContent:'space-between',
     marginRight: 100,
     paddingRight: 200,
     height: 1,
@@ -177,6 +177,11 @@ const styles = StyleSheet.create({
     marginTop:20,
   },
   font: {
+    flexDirection: "row",
+    paddingTop:5,
+    textAlign: "center",
+  },
+  reject: {
     flexDirection: "row",
     paddingTop:5,
     textAlign: "center",

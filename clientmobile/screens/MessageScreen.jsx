@@ -74,7 +74,7 @@ export default function MessagesScreen({ navigation }) {
   }
 
   return (
-    <TalkRn.Session appId="tPI8y4El" me={me}>
+    <TalkRn.Session  appId="tPI8y4El" me={me}>
       <TalkRn.ConversationList
         me={me}
         onSelectConversation={conversation => {
@@ -98,19 +98,18 @@ export default function MessagesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
+    borderWidth:1,
+    height:200
   },
-  itemContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#ecdff5",
-    borderRadius: 30,
-    padding: 20,
-    marginBottom: 10,
+  conversationList: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    padding: 10,
   },
   avatarContainer: {
-    width: 48,
-    height: 48,
+    width: 100,
+    height: 100,
     borderRadius: 24,
     backgroundColor: "#EAEAEA",
     alignItems: "center",
@@ -124,6 +123,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    borderWidth:1
   },
   nameContainer: {
     flexDirection: "row",
