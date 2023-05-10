@@ -183,7 +183,7 @@ export default function Post() {
           <TextInput
             numberOfLines={4}
             placeholder="Description"
-            style={[styles.input, styles.descIn]}
+            style={styles.descIn}
             value={description}
             onChangeText={text => setDescription(text)}
             multiline={true}
@@ -289,7 +289,7 @@ export default function Post() {
         </View>
 
         <View style={styles.mapContainer}>
-          <Text style={styles.label}>Meeting Point</Text>
+          <Text style={styles.meetingLabel}>Meeting Point</Text>
           <View style={styles.map}>
             <MapView
               style={{ flex: 1 }}
@@ -521,23 +521,26 @@ const styles = StyleSheet.create({
   },
   descIn: {
     width: "90%",
-    borderRadius: 1,
+    borderRadius: 5,
     marginBottom: 30,
     fontSize: 16,
+    backgroundColor: "#fff",
+
     // paddingLeft: 15,
     // paddingBottom: 6,
     height: 90,
   },
   input: {
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 30,
     fontSize: 16,
     // paddingLeft: 15,
     // paddingBottom: 10,
     backgroundColor: "#fff",
-    paddingBottom:10,
-    marginLeft:8,
+    width: "90%",
     // height: 40,
+    marginLeft:15,
+  
   },
 
   button: {
@@ -559,6 +562,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  meetingLabel: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "left",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft:5
   },
   labelInputImage: {
     fontSize: 18,
