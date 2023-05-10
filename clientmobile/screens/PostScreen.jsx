@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -33,7 +34,7 @@ export default function Post() {
   const [condition, setSelectedCondition] = useState("");
   const [category, setSelectedCategory] = useState("");
   const [image, setImage] = useState([]);
-  const [imageCam, setImageCam] = useState(null);
+  const [imageCam, setImageCam] = useState([]);
   const [city, setSelectedCity] = useState("");
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -115,7 +116,8 @@ export default function Post() {
   const takePicture = async () => {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
-      setImageCam(photo.uri);
+      setImageCam((prevImages) => [...prevImages, photo]);
+      
       setShowPreview(true);
     }
   };
@@ -255,15 +257,34 @@ export default function Post() {
             Take a picture
           </Text>
         </TouchableOpacity>
+
         {image.length > 0 && (
-          <View>
-            {image.map((image) => (
-              <Image
-                key={image.uri}
-                source={{ uri: image.uri }}
-                style={{ width: 200, height: 200 }}
-              />
-            ))}
+          <View style={styles.resultContainer}>
+            <FlatList
+              data={image}
+              keyExtractor={(item) => item.uri}
+              numColumns={3}
+              renderItem={({ item }) => (
+                <Image source={{ uri: item.uri }} style={styles.imageResult} />
+              )}
+            />
+          </View>
+        )}
+        <Text>
+
+        {/* {console.log(imageCam)} */}
+        </Text>
+        {imageCam.length > 0 && (
+          <View style={styles.resultContainer}>
+            <FlatList
+              data={imageCam}
+              keyExtractor={(item) => item.uri}
+              numColumns={3}
+              renderItem={({ item }) => {
+                console.log(item.uri , '<<<<<<') 
+                return  <Image source={{ uri: item.uri }} style={styles.imageResult} />
+              }}
+            />
           </View>
         )}
 
@@ -339,6 +360,15 @@ export default function Post() {
 }
 
 const styles = StyleSheet.create({
+  resultContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  imageResult: {
+    width: "33.33%",
+    aspectRatio: 1,
+    margin: 2,
+  },
   conPost: {
     backgroundColor: "#e39ff6",
     height: 50,

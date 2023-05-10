@@ -73,10 +73,13 @@ export default function MessagesScreen({ navigation }) {
     );
   }
 
+ 
+
   return (
     <TalkRn.Session  appId="tPI8y4El" me={me}>
       <TalkRn.ConversationList
         me={me}
+        style={{backgroundColor:'orange'}}
         onSelectConversation={conversation => {
           const user = conversation.others[0];
           const obj = {

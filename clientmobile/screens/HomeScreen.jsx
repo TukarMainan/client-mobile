@@ -20,6 +20,8 @@ import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import NearbyCard from "../components/NearbyCard";
 import { useNavigation } from "@react-navigation/native";
+import * as Location from 'expo-location';
+
 const DATA = [
   {
     id: "1",
@@ -91,6 +93,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -98,6 +101,17 @@ export default function Home() {
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
+
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        // Handle permission not granted error
+        return;
+      }
+  
+      let { coords } = await Location.getCurrentPositionAsync({});
+      setLocation(coords);
+    })();
   }, []);
 
   if (isLoading) {
@@ -242,6 +256,8 @@ export default function Home() {
             </View>
           </ScrollView>
         </Modal>
+        <Text>Latitude: {console.log(location?.latitude)}</Text>
+        <Text>Latitude: {console.log(location?.longitude)}</Text>
         <ScrollView>
           <Image
             source={{
