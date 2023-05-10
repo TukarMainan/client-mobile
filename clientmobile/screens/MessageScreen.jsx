@@ -73,13 +73,10 @@ export default function MessagesScreen({ navigation }) {
     );
   }
 
- 
-
   return (
-    <TalkRn.Session  appId="tPI8y4El" me={me}>
+    <TalkRn.Session appId="tPI8y4El" me={me}>
       <TalkRn.ConversationList
         me={me}
-        style={{backgroundColor:'orange'}}
         onSelectConversation={conversation => {
           const user = conversation.others[0];
           const obj = {
@@ -87,12 +84,11 @@ export default function MessagesScreen({ navigation }) {
             name: user.name,
             photoUrl: user.photoUrl,
           };
-          // console.log("conversation :", user.id, user.name, user.photoUrl);
-          // navigateToChat(conversation(obj));
-          // console.log("obj :", obj);
+
           navigation.navigate("Chat", obj);
         }}
       />
+
       {/* <TalkRn.Chatbox conversationBuilder={conversationBuilder} /> */}
     </TalkRn.Session>
   );
@@ -102,11 +98,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    borderWidth:1,
-    height:200
+    borderWidth: 1,
+    height: 200,
   },
   conversationList: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     padding: 10,
   },
@@ -126,7 +122,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    borderWidth:1
+    borderWidth: 1,
   },
   nameContainer: {
     flexDirection: "row",

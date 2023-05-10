@@ -102,7 +102,7 @@ export default function ProfilePage() {
   );
 
   const navigation = useNavigation();
-  const handleItemPress = (item) => {
+  const handleItemPress = item => {
     navigation.navigate("Detail", { item });
   };
 
@@ -140,25 +140,39 @@ export default function ProfilePage() {
 
         {/* User information */}
         <View style={styles.userInfoContainer}>
-          <Text style={styles.username}>Hi , William!</Text>
-          {/* {note &&  */}
-          <Text style={styles.username}>Barter sama gua dijamin JOSS!</Text>
-          {/* } */}
-          <TouchableOpacity style={{flex:1,flexDirection:'row'}} onPress={() => setIsModalOpen(true)} >
-            <View style={{flex:1}} >
-              <Text style={{flex:1,fontSize:20,fontWeight:'400',paddingTop:10,marginLeft:130}} onPress={handleOpenModal}>
-                Edit profile
-              </Text>
-            </View>
-            <View style={{marginRight:120,paddingTop:8}} >
-              <Icon name="pencil" size={25} />
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.iconStyle}>
-            <Icon name="map-marker-outline" size={40} />
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                flex: 1,
+                fontSize: 16,
+                fontWeight: "900",
+                paddingTop: 6,
+                marginLeft: 12,
+                color: "#F68383",
+                // marginTop: 12,
+                // marginBottom: 12,
+              }}
+              onPress={handleOpenModal}
+            >
+              Edit profile
+            </Text>
           </View>
-          <Text style={styles.cityStyle}>Meeting Point Around Jakarta</Text>
+          <Text style={styles.username}>William</Text>
+          <View style={styles.iconStyle}>
+            <Icon name="map-marker-outline" size={24} />
+          </View>
+          <Text style={styles.cityStyle}>Around Jakarta</Text>
+          {/* {note &&  */}
+          {/* <Text style={styles.wumpa}>Barter sama gua dijamin JOSS!</Text> */}
+          {/* } */}
+          <TouchableOpacity
+            style={{ flex: 1, flexDirection: "row" }}
+            onPress={() => setIsModalOpen(true)}
+          >
+            {/* <View style={{ marginRight: 120, paddingTop: 8 }}>
+              <Icon name="pencil" size={25} />
+            </View> */}
+          </TouchableOpacity>
 
           <Modal visible={isModalOpen}>
             <ScrollView style={styles.container}>
@@ -168,7 +182,7 @@ export default function ProfilePage() {
                   placeholder="Username"
                   style={styles.input}
                   value={username}
-                  onChangeText={(text) => setUsername(text)}
+                  onChangeText={text => setUsername(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -177,7 +191,7 @@ export default function ProfilePage() {
                   placeholder="Name"
                   style={styles.input}
                   value={name}
-                  onChangeText={(text) => setName(text)}
+                  onChangeText={text => setName(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -186,7 +200,7 @@ export default function ProfilePage() {
                   placeholder="Email"
                   style={styles.input}
                   value={email}
-                  onChangeText={(text) => setEmail(text)}
+                  onChangeText={text => setEmail(text)}
                 />
               </View>
 
@@ -197,7 +211,7 @@ export default function ProfilePage() {
                   placeholder="Password"
                   style={styles.input}
                   value={password}
-                  onChangeText={(text) => setPassword(text)}
+                  onChangeText={text => setPassword(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -206,7 +220,7 @@ export default function ProfilePage() {
                   placeholder="Profile Image"
                   style={styles.input}
                   value={profileImg}
-                  onChangeText={(text) => setProfileImg(text)}
+                  onChangeText={text => setProfileImg(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -215,7 +229,7 @@ export default function ProfilePage() {
                   placeholder="Banner"
                   style={styles.input}
                   value={banner}
-                  onChangeText={(text) => setBanner(text)}
+                  onChangeText={text => setBanner(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -224,7 +238,7 @@ export default function ProfilePage() {
                   placeholder="Note"
                   style={styles.input}
                   value={note}
-                  onChangeText={(text) => setNote(text)}
+                  onChangeText={text => setNote(text)}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -233,7 +247,7 @@ export default function ProfilePage() {
                   placeholder="Phone Number"
                   style={styles.input}
                   value={phoneNum}
-                  onChangeText={(text) => setPhoneNum(text)}
+                  onChangeText={text => setPhoneNum(text)}
                 />
               </View>
 
@@ -241,7 +255,7 @@ export default function ProfilePage() {
                 <Text style={styles.titleLabel}>City</Text>
                 <Picker
                   selectedValue={city}
-                  onValueChange={(itemValue) => setCity(itemValue)}
+                  onValueChange={itemValue => setCity(itemValue)}
                   style={styles.dropdown}
                 >
                   <Picker.Item
@@ -257,11 +271,37 @@ export default function ProfilePage() {
                 </Picker>
               </View>
 
-              <TouchableOpacity style={styles.buttonContainer}  onPress={handleCloseModal}>
-                <Text onPress={handleUserInfo} style={{textAlign:'center',fontSize:20,fontWeight:'bold',paddingTop:10}} >UPDATE</Text>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={handleCloseModal}
+              >
+                <Text
+                  onPress={handleUserInfo}
+                  style={{
+                    textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingTop: 10,
+                  }}
+                >
+                  UPDATE
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonContainer} onPress={()=>  setIsModalOpen(false)} >
-                <Text onPress={handleUserInfo} style={{textAlign:'center',fontSize:20,fontWeight:'bold',paddingTop:10}} >CLOSE</Text>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={() => setIsModalOpen(false)}
+              >
+                <Text
+                  onPress={handleUserInfo}
+                  style={{
+                    textAlign: "center",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingTop: 10,
+                  }}
+                >
+                  CLOSE
+                </Text>
               </TouchableOpacity>
             </ScrollView>
           </Modal>
@@ -294,10 +334,10 @@ export default function ProfilePage() {
         {/* Grid list */}
         <View style={styles.gridListContainer}>
           <ScrollView>
-            <Text style={styles.reviewsTitle}>Post</Text>
+            <Text style={styles.wumpa}>Post</Text>
             <View style={styles.grid}>
               {item.length > 0 &&
-                item.map((item) => (
+                item.map(item => (
                   <TouchableOpacity
                     onPress={() => handleItemPress(item)}
                     key={item.id}
@@ -338,7 +378,8 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   cityStyle: {
-    fontSize: 20,
+    fontSize: 16,
+    marginLeft: 18,
   },
   modalContainer: {
     backgroundColor: "#fff",
@@ -372,15 +413,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 16,
-    backgroundColor:'#a06ccb',
-    height:50,
-    borderRadius:20,
-    marginHorizontal:20,
-    marginBottom:15
+    backgroundColor: "#a06ccb",
+    height: 50,
+    borderRadius: 20,
+    marginHorizontal: 20,
+    marginBottom: 15,
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#fffefc",
   },
   profileContainer: {
     height: 200,
@@ -393,7 +434,9 @@ const styles = StyleSheet.create({
   profilePictureContainer: {
     position: "absolute",
     bottom: -50,
-    left: "50%",
+    left: "14%",
+    // bottom: "1%",
+    top: "65%",
     transform: [{ translateX: -50 }],
     height: 100,
     width: 100,
@@ -407,15 +450,32 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   userInfoContainer: {
+    // backgroundColor: "#FFF8E7",
     paddingVertical: 20,
     paddingHorizontal: 10,
-    alignItems: "center",
+    // alignItems: "center",
     marginTop: 32,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+  },
+  iconStyle: {
+    marginLeft: 12,
+    marginTop: 6,
   },
   username: {
     fontWeight: "bold",
-    fontSize: 24,
+    marginLeft: 12,
+    fontSize: 48,
     marginBottom: 5,
+    textAlign: "left",
+    color: "#444",
+  },
+  wumpa: {
+    marginLeft: 12,
+    fontSize: 14,
+    marginBottom: 5,
+    textAlign: "left",
+    marginTop: 17,
   },
   description: {
     fontSize: 16,
@@ -423,14 +483,28 @@ const styles = StyleSheet.create({
   reviewsContainer: {
     paddingHorizontal: 10,
     paddingBottom: 10,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#7C67F2",
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
   reviewsTitle: {
     fontWeight: "bold",
     fontSize: 20,
     marginBottom: 10,
-    textAlign: "center",
+    textAlign: "left",
     marginTop: 5,
+    marginLeft: 12,
+    color: "#FFF8E7",
+  },
+  wumpa: {
+    fontWeight: "bold",
+    fontSize: 40,
+    marginBottom: 10,
+    textAlign: "left",
+    marginTop: 24,
+    marginLeft: 24,
+    marginBottom: 24,
+    color: "#7C67F2",
   },
   reviewContainer: {
     backgroundColor: "#fff",

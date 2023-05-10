@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
 
-export default function NearbyCard({ item }){
+export default function NearbyCard({ item }) {
   return (
     <View style={styles.container}>
       <Image source={{ uri: item?.images[0] }} style={styles.image} />
@@ -9,36 +9,41 @@ export default function NearbyCard({ item }){
       <Text style={styles.category}>{item?.category}</Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 10,
   },
   image: {
     width: 150,
     height: 150,
-    borderTopLeftRadius:20,
-    borderTopRightRadius:20
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    backgroundColor:'#e39ff6',
-    width:150,
-    textAlign:'center'
+    fontSize: 22,
+    fontWeight: "bold",
+    backgroundColor: "#FFF8E7",
+    width: 150,
+    // textAlign: "center",
+    color: "#333333",
+    textAlign: "left",
+    paddingLeft: 20,
   },
   category: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    backgroundColor:'#e39ff6',
-    width:150,
-    textAlign:'center',
-    borderBottomLeftRadius:20,
-    borderBottomRightRadius:20
-
+    fontSize: 12,
+    // fontWeight: "bold",
+    backgroundColor: "#FFF8E7",
+    width: 150,
+    // textAlign: "center",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    color: "#F68383",
+    paddingBottom: 12,
+    textAlign: "left",
+    paddingLeft: 20,
   },
 });
-
