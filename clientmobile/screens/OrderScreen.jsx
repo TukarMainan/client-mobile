@@ -70,7 +70,7 @@ export default function Trade({ route }) {
     <>
       <ScrollView>
         <View style={styles.container}>
-          {DATA?.map((item) => {
+          {DATA?.map(item => {
             return (
               <View style={styles.cardContainer} key={item.id}>
                 <View style={styles.card}>
@@ -79,13 +79,13 @@ export default function Trade({ route }) {
 
                 <View style={styles.containerFill}>
                   <View style={styles.descContain}>
-
-                  <Text style={styles.fontDesc} >Request from John Wick </Text>
-                  <Text style={styles.fontTitle} >Robot GEDEG </Text>
-                  <Text style={styles.fontdes} >Descriptionadhwailwudhailuwdh </Text>
+                    <Text style={styles.fontDesc}>Request from John Wick </Text>
+                    <Text style={styles.fontTitle}>Robot GEDEG </Text>
+                    <Text style={styles.fontdes}>
+                      Descriptionadhwailwudhailuwdh{" "}
+                    </Text>
                   </View>
                   <View style={styles.containerButton}>
-                   
                     <TouchableOpacity
                       style={styles.description}
                       onPress={handleAccept}
@@ -110,24 +110,29 @@ export default function Trade({ route }) {
 }
 
 const styles = StyleSheet.create({
-  fontDesc:{
-    paddingLeft:1,
-    fontSize:18,
-    fontWeight:'bold',
-    textAlign:'center',
-
+  fontDesc: {
+    // paddingLeft: 1,
+    // fontSize: 18,
+    // fontWeight: "bold",
+    textAlign: "left",
+    color: "#444444",
+    fontSize: 12,
+    marginBottom: 2,
+    paddingLeft: 12,
   },
-  fontTitle:{
-    paddingLeft:1,
-    fontSize:18,
-    fontWeight:'bold',
-    textAlign:'center',
+  fontTitle: {
+    fontWeight: "bold",
+    textAlign: "left",
+    color: "#222222",
+    fontSize: 24,
+    marginBottom: 7,
+    paddingLeft: 12,
   },
-  fontdes:{
-    paddingLeft:1,
-    fontSize:15,
-    fontWeight:'bold',
-    textAlign:'center',
+  fontdes: {
+    paddingLeft: 12,
+    fontSize: 12,
+    // fontWeight: "bold",
+    textAlign: "left",
   },
   container: {
     flex: 1,
@@ -137,7 +142,9 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    // marginBottom: 10,
+    marginLeft: 12,
+    marginRight: 12,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -146,18 +153,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.24,
     shadowRadius: 3.84,
     elevation: 5,
+    // marginBottom: 15,
     marginBottom: 15,
     backgroundColor: "#FFF",
   },
   containerButton: {
-    flexDirection: 'row',
-    justifyContent:'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginRight: 100,
     paddingRight: 200,
     height: 1,
-    paddingTop:30,
-    paddingLeft:10,
-
+    paddingTop: 30,
+    paddingLeft: 10,
   },
 
   card: {
@@ -169,29 +176,35 @@ const styles = StyleSheet.create({
     // marginLeft: 50,
   },
   description: {
-    paddingRight: 5,
+    // paddingRight: 5,
     width: 100,
-    borderRadius: 20,
-    backgroundColor: "#a06ccb",
+    borderRadius: 12,
+    backgroundColor: "#7C67F2",
     height: 30,
-    marginTop:20,
+    marginTop: 20,
+    marginRight: 4,
+    marginLeft: 8,
   },
   font: {
     flexDirection: "row",
-    paddingTop:5,
+    paddingTop: 5,
     textAlign: "center",
+    color: "#FFF8E7",
+    // marginRight: 20,
   },
   reject: {
     flexDirection: "row",
-    paddingTop:5,
+    paddingTop: 5,
     textAlign: "center",
+    color: "#FFF8E7",
+    // marginLeft: 12,
   },
   containerFill: {
-    marginBottom:50
+    marginBottom: 50,
   },
-  descContain:{
-    width:225,
-    height:50,
-    marginBottom:20
-  }
+  descContain: {
+    width: 225,
+    height: 50,
+    marginBottom: 20,
+  },
 });

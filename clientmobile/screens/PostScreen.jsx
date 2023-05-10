@@ -116,8 +116,8 @@ export default function Post() {
   const takePicture = async () => {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
-      setImageCam((prevImages) => [...prevImages, photo]);
-      
+      setImageCam(prevImages => [...prevImages, photo]);
+
       setShowPreview(true);
     }
   };
@@ -169,12 +169,12 @@ export default function Post() {
     <>
       <ScrollView style={styles.container}>
         <View style={styles.inputContainer}>
-          <Text style={styles.titleLabel}>Title</Text>
+          <Text style={styles.titleLabel}>Toy name</Text>
           <TextInput
-            placeholder="Title"
+            placeholder="Enter toy name"
             style={styles.input}
             value={title}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={text => setTitle(text)}
           />
         </View>
 
@@ -189,7 +189,7 @@ export default function Post() {
             placeholder="Description"
             style={[styles.input, styles.descIn]}
             value={description}
-            onChangeText={(text) => setDescription(text)}
+            onChangeText={text => setDescription(text)}
             multiline={true}
           />
         </View>
@@ -262,7 +262,7 @@ export default function Post() {
           <View style={styles.resultContainer}>
             <FlatList
               data={image}
-              keyExtractor={(item) => item.uri}
+              keyExtractor={item => item.uri}
               numColumns={3}
               renderItem={({ item }) => (
                 <Image source={{ uri: item.uri }} style={styles.imageResult} />
@@ -270,19 +270,21 @@ export default function Post() {
             />
           </View>
         )}
-        <Text>
-
-        {/* {console.log(imageCam)} */}
-        </Text>
+        <Text>{/* {console.log(imageCam)} */}</Text>
         {imageCam.length > 0 && (
           <View style={styles.resultContainer}>
             <FlatList
               data={imageCam}
-              keyExtractor={(item) => item.uri}
+              keyExtractor={item => item.uri}
               numColumns={3}
               renderItem={({ item }) => {
-                console.log(item.uri , '<<<<<<') 
-                return  <Image source={{ uri: item.uri }} style={styles.imageResult} />
+                console.log(item.uri, "<<<<<<");
+                return (
+                  <Image
+                    source={{ uri: item.uri }}
+                    style={styles.imageResult}
+                  />
+                );
               }}
             />
           </View>
@@ -299,7 +301,7 @@ export default function Post() {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
-              onPress={(event) => setMeetingPoint(event.nativeEvent.coordinate)}
+              onPress={event => setMeetingPoint(event.nativeEvent.coordinate)}
             >
               <Marker coordinate={meetingPoint} />
             </MapView>
@@ -315,7 +317,7 @@ export default function Post() {
           <Camera
             style={styles.camera}
             type={type}
-            ref={(ref) => (cameraRef = ref)}
+            ref={ref => (cameraRef = ref)}
           >
             <View style={styles.buttonContainer}>
               <TouchableOpacity
@@ -370,16 +372,17 @@ const styles = StyleSheet.create({
     margin: 2,
   },
   conPost: {
-    backgroundColor: "#e39ff6",
+    backgroundColor: "#F68383",
     height: 50,
-    borderRadius: 20,
+    borderRadius: 12,
     marginVertical: 10,
     marginBottom: 20,
   },
   con: {
-    backgroundColor: "#e39ff6",
+    color: "#FFF8E7",
+    backgroundColor: "#7C67F2",
     height: 50,
-    borderRadius: 20,
+    borderRadius: 12,
     marginVertical: 10,
     marginBottom: 20,
   },
@@ -411,7 +414,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF8E7",
     paddingBottom: 15,
   },
   camera: {
@@ -482,7 +485,8 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    borderRadius: 50,
+    marginTop: 30,
+    borderRadius: 12,
     backgroundColor: "#f2f2f2",
     width: "90%",
     height: 50,
@@ -491,15 +495,16 @@ const styles = StyleSheet.create({
   },
   descAI: {
     marginBottom: 30,
-    borderRadius: 40,
+    borderRadius: 8,
     textAlign: "center",
     alignItems: "center",
-    marginHorizontal: 15,
-    paddingVertical: 17,
-    backgroundColor: "#e39ff6",
+    marginHorizontal: 60,
+    paddingVertical: 8,
+    backgroundColor: "#7C67F2",
+    color: "#FFF8E7",
   },
   inputDescription: {
-    borderRadius: 50,
+    borderRadius: 12,
     backgroundColor: "#f2f2f2",
     width: "93%",
     height: 110,
@@ -511,25 +516,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
-    textAlign: "center",
+    textAlign: "left",
     marginBottom: 20,
   },
   descIn: {
     width: "90%",
-    borderRadius: 4,
+    borderRadius: 1,
     marginBottom: 30,
     fontSize: 16,
-    paddingLeft: 15,
-    paddingBottom: 6,
+    // paddingLeft: 15,
+    // paddingBottom: 6,
     height: 90,
   },
   input: {
-    borderRadius: 4,
+    borderRadius: 1,
     marginBottom: 20,
     fontSize: 16,
-    paddingLeft: 15,
-    paddingBottom: 10,
-    height: 40,
+    // paddingLeft: 15,
+    // paddingBottom: 10,
+    backgroundColor: "#fff",
+    // height: 40,
   },
 
   button: {
@@ -547,7 +553,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -563,11 +569,12 @@ const styles = StyleSheet.create({
   titleLabel: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
+    marginBottom: 28,
+    // paddingBottom: 4,
   },
   mapContainer: {
     borderWidth: 1,

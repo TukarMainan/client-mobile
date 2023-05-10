@@ -20,7 +20,7 @@ import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import NearbyCard from "../components/NearbyCard";
 import { useNavigation } from "@react-navigation/native";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
 const DATA = [
   {
@@ -28,7 +28,7 @@ const DATA = [
     name: "Item 1",
     city: "Houston",
     review: 5,
-    category:'Neutral',
+    category: "Neutral",
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
@@ -39,7 +39,7 @@ const DATA = [
     id: "2",
     name: "Item 2",
     city: "New York",
-    category:'Girls',
+    category: "Girls",
 
     review: 3,
     images: [
@@ -53,7 +53,7 @@ const DATA = [
     name: "Item 3",
     city: "Chicago",
     review: 4,
-    category:'Boys',
+    category: "Boys",
     images: [
       "https://images.unsplash.com/photo-1610968629438-24a6bbbf1d83?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
 
@@ -64,7 +64,7 @@ const DATA = [
     id: "4",
     name: "Item 4",
     city: "Los Angeles",
-    category:'Boys',
+    category: "Boys",
 
     review: 5,
     images: [
@@ -104,11 +104,11 @@ export default function Home() {
 
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         // Handle permission not granted error
         return;
       }
-  
+
       let { coords } = await Location.getCurrentPositionAsync({});
       setLocation(coords);
     })();
@@ -132,24 +132,24 @@ export default function Home() {
 
   const navigation = useNavigation();
 
-  const handleItemPress = (item) => {
+  const handleItemPress = item => {
     navigation.navigate("Detail", { item });
   };
 
-  const handleCityChange = (city) => {
+  const handleCityChange = city => {
     setSelectedCity(city);
   };
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = category => {
     setSelectedCategory(category);
   };
 
-  const handleSortChange = (sort) => {
+  const handleSortChange = sort => {
     setSelectedSort(sort);
   };
 
-  const handleSearch = (text) => {
-    const newData = DATA.filter((item) => {
+  const handleSearch = text => {
+    const newData = DATA.filter(item => {
       const itemData = item.name.toLowerCase();
       const searchText = text.toLowerCase();
       return itemData.indexOf(searchText) > -1;
@@ -193,7 +193,7 @@ export default function Home() {
                   selectedValue={selectedCity}
                   onValueChange={handleCityChange}
                 >
-                  {cities.map((city) => (
+                  {cities.map(city => (
                     <Picker.Item key={city} label={city} value={city} />
                   ))}
                 </Picker>
@@ -205,7 +205,7 @@ export default function Home() {
                   selectedValue={selectedCategory}
                   onValueChange={handleCategoryChange}
                 >
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <Picker.Item
                       key={category}
                       label={category}
@@ -221,7 +221,7 @@ export default function Home() {
                   selectedValue={selectedCategory}
                   onValueChange={handleCategoryChange}
                 >
-                  {conditions.map((condition) => (
+                  {conditions.map(condition => (
                     <Picker.Item
                       key={condition}
                       label={condition}
@@ -267,12 +267,12 @@ export default function Home() {
           />
 
           <View style={styles.recommendationContainer}>
-            <View style={styles.box}>
-              <Text style={styles.recommendation}>Nearby Toys</Text>
-            </View>
+            {/* <View style={styles.box}> */}
+            <Text style={styles.recommendation}>Toys Nearby</Text>
+            {/* </View> */}
             <ScrollView horizontal={true}>
               <View style={styles.gridList}>
-                {DATA.map((item) => (
+                {DATA.map(item => (
                   <TouchableOpacity
                     onPress={() => handleItemPress(item)}
                     key={item.id}
@@ -285,12 +285,12 @@ export default function Home() {
           </View>
           <View>
             <ScrollView>
-            <View style={styles.box}>
-              <Text style={styles.recommendation}>Toys</Text>
-            </View>
+              <View style={styles.box}>
+                <Text style={styles.wumpa}>Explore</Text>
+              </View>
               {searchQuery.length > 0 ? (
                 <View style={styles.cardContainer}>
-                  {searchQuery.map((item) => (
+                  {searchQuery.map(item => (
                     <TouchableOpacity
                       onPress={() => handleItemPress(item)}
                       key={item.id}
@@ -303,7 +303,7 @@ export default function Home() {
                 </View>
               ) : (
                 <View style={styles.cardContainer}>
-                  {DATA.map((item) => (
+                  {DATA.map(item => (
                     <TouchableOpacity
                       onPress={() => handleItemPress(item)}
                       key={item.id}
@@ -334,7 +334,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-
   },
   card: {
     maxWidth: "45%",
@@ -406,6 +405,7 @@ const styles = StyleSheet.create({
   banner: {
     width: "100%",
     height: 200,
+    // borderRadius: 15,
   },
   spinnerContainer: {
     flex: 1,
@@ -442,19 +442,34 @@ const styles = StyleSheet.create({
   box: {
     marginTop: 7,
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    borderRadius: 20,
+    borderRadius: 12,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    alignSelf: "center",
+    // alignSelf: "center",
   },
   recommendation: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: "bold",
-    color: "#000000",
-    textAlign: "center",
+    color: "#FFF8E7",
+    textAlign: "left",
+    marginTop: 20,
+    marginBottom: 8,
+    marginLeft: 24,
+  },
+  wumpa: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#7C67F2",
+    textAlign: "left",
+    marginTop: 20,
+    marginBottom: 8,
+    marginLeft: 24,
   },
   recommendationContainer: {
-    backgroundColor: "#ecdff5",
+    backgroundColor: "#7C67F2",
+    borderBottomLeftRadius: 65,
+    // borderBottomRightRadius: 24,
+    // marginTop: 12,
   },
   containerModal: {
     flex: 1,
