@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import axios  from 'axios'
 const DATA = [
   { id: "1", text: "Review 1" },
   { id: "2", text: "Review 2" },
@@ -74,6 +75,13 @@ const item = [
   },
 ];
 
+const AsyncStorage = {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4MzgxMTE0MH0.V03Ya0TWOtGTX6iAMAh7s_tyXgro4bbFvBR-tnoaWfs",
+    "id": "8a023fb1-7d88-4921-ae6a-16350ac8b2b0",
+    "username": "Bella",
+    "email": "bella@gmail.com"
+};
+
 // const canEdit = userId === postUserId
 // canEdit && following condition
 
@@ -88,6 +96,7 @@ export default function ProfilePage() {
   const [phoneNum, setPhoneNum] = useState("");
   const [note, setNote] = useState("");
   const [city, setCity] = useState("");
+  const [userData, setUserData] = useState({});
   function handleOpenModal() {
     setIsModalOpen(true);
   }
@@ -109,17 +118,7 @@ export default function ProfilePage() {
 
   function handleUserInfo() {
     setIsModalOpen(false);
-    console.log(
-      name,
-      username,
-      email,
-      password,
-      banner,
-      profileImg,
-      phoneNum,
-      note,
-      city
-    );
+      //update
   }
 
   const pickImage = async () => {
@@ -148,6 +147,26 @@ export default function ProfilePage() {
       setBanner([...banner, ...result.assets]);
     }
   };
+
+  const BASE_URL = "http://54.169.72.32";
+
+  async function getUser() {
+    // console.log(AsyncStorage.id);
+    try {
+      const { data } = await axios({
+        url: `${BASE_URL}/public/users/${AsyncStorage.id}`,
+        method: "GET",
+      });
+      // console.log(data , "DATAAAAAAA")
+      setUserData = data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getUser()
+  },[])
 
   return (
     <ScrollView>
@@ -185,26 +204,20 @@ export default function ProfilePage() {
               Edit profile
             </Text>
           </View>
-          <Text style={styles.username}>William</Text>
-          <View style={{ flex: 1,flexDirection:'row'}}>
-            <View style={{ width:30 , paddingLeft:7}}>
+          <Text style={styles.username}>{userData.username}</Text>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            <View style={{ width: 30, paddingLeft: 7 }}>
               <Icon name="map-marker-outline" size={30} />
             </View>
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.cityStyle}>Around Jakarta</Text>
             </View>
           </View>
-          {/* {note &&  */}
-          {/* <Text style={styles.wumpa}>Barter sama gua dijamin JOSS!</Text> */}
-          {/* } */}
+
           <TouchableOpacity
             style={{ flex: 1, flexDirection: "row" }}
             onPress={() => setIsModalOpen(true)}
-          >
-            {/* <View style={{ marginRight: 120, paddingTop: 8 }}>
-              <Icon name="pencil" size={25} />
-            </View> */}
-          </TouchableOpacity>
+          ></TouchableOpacity>
 
           <Modal visible={isModalOpen}>
             <ScrollView style={styles.container}>
@@ -264,7 +277,6 @@ export default function ProfilePage() {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <Text>{console.log()}</Text>
               {profileImg.length > 0 && (
                 <View style={styles.resultContainer}>
                   <FlatList
@@ -287,7 +299,6 @@ export default function ProfilePage() {
                     keyExtractor={(item) => item.uri}
                     numColumns={3}
                     renderItem={({ item }) => {
-                      console.log(item.uri, "<<<<<<");
                       return (
                         <Image
                           source={{ uri: item.uri }}
