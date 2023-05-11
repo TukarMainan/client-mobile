@@ -10,8 +10,13 @@ import {
   Modal
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import Spinner from "react-native-loading-spinner-overlay";
+import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker } from 'react-native-maps';
+import axios from "axios";
+import { BASE_URL } from "../config/api";
+import Logo from "../logo.png";
 
 const DATA = [
   {
@@ -65,6 +70,27 @@ const DATA = [
 
 
 export default function Trade({ route }) {
+  const [isTradesLoading, setIsTradesLoading] = useState(true);
+  const [trades, setTrades] = useState([]);
+
+  async function fetchTrades() {
+    try {
+      const {data} = await axios.get(BASE_URL + "/trades/sender", {
+        headers: {
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4MzgxMTE0MH0.V03Ya0TWOtGTX6iAMAh7s_tyXgro4bbFvBR-tnoaWfs"
+        }
+      });
+      setTrades(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsTradesLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchTrades();
+  }, [])
   //   const { item } = route.params;
 const [isVisible,setIsVisible]= useState(true)
 const [loc,setLoc] = useState({
@@ -80,8 +106,8 @@ const [loc,setLoc] = useState({
     console.log("handleReject");
   }
 
-  const handleItemPress = (item) => {
-    navigation.navigate("Detail", { item });
+  const handleItemPress = (id) => {
+    navigation.navigate("Detail", { id });
   };
 
   function handleComplete(){
@@ -105,23 +131,44 @@ const [loc,setLoc] = useState({
   //     );
   //   }
   // }
+
+  if (isTradesLoading) {
+    return (
+        <View style={styles.spinnerContainer}>
+            <Spinner
+                visible={isTradesLoading}
+                customIndicator={
+                    <Animatable.View
+                        animation="bounce"
+                        iterationCount="infinite"
+                    >
+                        <Image source={Logo} style={styles.spinnerLogo} />
+                    </Animatable.View>
+                }
+                overlayColor="rgba(0, 0, 0, 0.5)"
+            />
+        </View>
+    );
+}
+
   return (
     <>
       <ScrollView>
         <View style={styles.container}>
-          {DATA?.map(item => {
+          {trades?.map(item => {
+          console.log(trades);
+            console.log(item?.TargetPost.Category);
             return (
               <View style={styles.cardContainer} key={item.id}>
-                <TouchableOpacity style={styles.card} onPress={() => handleItemPress(item)} >
-                  <Card item={item} key={item.id} />
+                <TouchableOpacity style={styles.card} onPress={() => handleItemPress(item.TargetPostId)} >
+                  <Card item={item?.TargetPost} key={item.id} />
                 </TouchableOpacity>
-
                 <View style={styles.containerFill}>
                   <View style={styles.descContain}>
-                    <Text style={styles.fontDesc}>Request from John Wick </Text>
-                    <Text style={styles.fontTitle}>Robot GEDEG </Text>
+                    <Text style={styles.fontDesc}>Requesting trade to {item?.TargetPost?.User.username} </Text>
+                    <Text style={styles.fontTitle}>{item?.TargetPost?.title}</Text>
                     <Text style={styles.fontdes}>
-                      Descriptionadhwailwudhailuwdh{" "}
+                    {item?.TargetPost?.description}
                     </Text>
                   </View>
                   <View style={styles.containerButton}>
@@ -260,6 +307,15 @@ const styles = StyleSheet.create({
     // marginBottom: 100,
     // marginLeft: 50,
   },
+  spinnerContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+},
+spinnerLogo: {
+    width: 40,
+    height: 40,
+},
   description: {
     // paddingRight: 5,
     width: 100,
