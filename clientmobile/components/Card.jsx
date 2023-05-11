@@ -1,10 +1,29 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { GEO_API_REVERSE_LOCATION } from "../config/api";
 
 export default function Card({ item }) {
+    const [locationName, setLocationName] = useState("");
     const itemCreatedAt = item?.Category.createdAt;
     const currentDate = new Date();
     const createdDate = new Date(itemCreatedAt);
+
+    const [long, lat] = item?.meetingPoint.coordinates;
+    async function fetchLocationName() {
+        try {
+            const { data } = await axios.get(
+                GEO_API_REVERSE_LOCATION(long, lat)
+            );
+            setLocationName(data.features[0].properties.city);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchLocationName();
+    }, []);
 
     const timeDiff = currentDate.getTime() - createdDate.getTime();
 
@@ -28,6 +47,7 @@ export default function Card({ item }) {
     return (
         <View style={styles.container}>
             <Image source={{ uri: item?.images[0] }} style={styles.image} />
+            <Text style={styles.category}>{locationName}</Text>
             <Text style={styles.name}>{item?.title}</Text>
             <Text style={styles.category}>{item?.Category.name}</Text>
             <Text style={styles.category}>{timePostCreatedInString}</Text>
