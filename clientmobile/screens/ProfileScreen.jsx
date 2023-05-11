@@ -19,6 +19,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import axios  from 'axios'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const DATA = [
   { id: "1", text: "Review 1" },
   { id: "2", text: "Review 2" },
@@ -75,12 +77,12 @@ const item = [
   },
 ];
 
-const AsyncStorage = {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4MzgxMTE0MH0.V03Ya0TWOtGTX6iAMAh7s_tyXgro4bbFvBR-tnoaWfs",
-    "id": "8a023fb1-7d88-4921-ae6a-16350ac8b2b0",
-    "username": "Bella",
-    "email": "bella@gmail.com"
-};
+// const AsyncStorage = {
+//     "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4MzgxMTE0MH0.V03Ya0TWOtGTX6iAMAh7s_tyXgro4bbFvBR-tnoaWfs",
+//     "id": "8a023fb1-7d88-4921-ae6a-16350ac8b2b0",
+//     "username": "Bella",
+//     "email": "bella@gmail.com"
+// };
 
 // const canEdit = userId === postUserId
 // canEdit && following condition
@@ -112,8 +114,8 @@ export default function ProfilePage() {
   );
 
   const navigation = useNavigation();
-  const handleItemPress = (item) => {
-    navigation.navigate("Detail", { item });
+  const handleItemPress = (id) => {
+    navigation.navigate("Detail", { id });
   };
 
   function handleUserInfo() {
@@ -153,12 +155,15 @@ export default function ProfilePage() {
   async function getUser() {
     // console.log(AsyncStorage.id);
     try {
+      const value = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(value);
+      // console.log(obj.id);
       const { data } = await axios({
-        url: `${BASE_URL}/public/users/${AsyncStorage.id}`,
+        url: `${BASE_URL}/public/users/${obj.id}`,
         method: "GET",
       });
-      // console.log(data , "DATAAAAAAA")
-      setUserData = data;
+      console.log(data.Posts , "POST")
+      setUserData(data) 
     } catch (error) {
       console.log(error);
     }
@@ -169,6 +174,7 @@ export default function ProfilePage() {
   },[])
 
   return (
+
     <ScrollView>
       <View style={styles.container}>
         {/* Profile picture and background */}
@@ -204,7 +210,7 @@ export default function ProfilePage() {
               Edit profile
             </Text>
           </View>
-          <Text style={styles.username}>{userData.username}</Text>
+          <Text style={styles.username}>{userData?.name}</Text>
           <View style={{ flex: 1, flexDirection: "row" }}>
             <View style={{ width: 30, paddingLeft: 7 }}>
               <Icon name="map-marker-outline" size={30} />
@@ -418,10 +424,10 @@ export default function ProfilePage() {
           <ScrollView>
             <Text style={styles.wumpa}>Post</Text>
             <View style={styles.grid}>
-              {item.length > 0 &&
-                item.map((item) => (
+              {userData?.Posts?.length > 0 &&
+                userData.Posts.map((item) => (
                   <TouchableOpacity
-                    onPress={() => handleItemPress(item)}
+                    onPress={() => handleItemPress(item.id)}
                     key={item.id}
                   >
                     <View style={styles.card}>
@@ -429,7 +435,7 @@ export default function ProfilePage() {
                     </View>
                   </TouchableOpacity>
                 ))}
-              {item.length === 0 && <Text>Empty Post</Text>}
+              {userData?.Posts?.length === 0 && <Text>Empty Post</Text>}
             </View>
           </ScrollView>
         </View>

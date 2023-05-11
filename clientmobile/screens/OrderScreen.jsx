@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  Modal
+  Modal,
+  Button
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -17,7 +18,7 @@ import MapView, { Marker } from 'react-native-maps';
 import axios from "axios";
 import { BASE_URL } from "../config/api";
 import Logo from "../logo.png";
-
+import TabRequesting from '../components/TabRequesting'
 const DATA = [
   {
     id: "1",
@@ -153,7 +154,7 @@ const [loc,setLoc] = useState({
 
   return (
     <>
-      <ScrollView>
+      {/* <ScrollView>
         <View style={styles.container}>
           {trades?.map(item => {
           console.log(trades);
@@ -205,7 +206,10 @@ const [loc,setLoc] = useState({
             );
           })}
         </View>
-      </ScrollView>
+      </ScrollView> */}
+      <Button title="Requesting" />
+      <Button title="Accept Request" />
+      <TabRequesting trades={trades} />
       <Modal
       animationType="fade"
       transparent={true}
