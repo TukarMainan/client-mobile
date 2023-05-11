@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   Animated,
   TextInput,
+  Modal,
+  FlatList,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -56,13 +58,40 @@ const DetailsPage = ({ route }) => {
   }, [isLoading]);
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [access_token, setAccess_token] = useState("");
   const [comment, setComment] = useState("");
+  const [PostId, setPostId] = useState("");
+  const [reportName, setReportName] = useState("");
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const commentt = ["Aku cinta hacktiv8", "TukarMainan Jaya jaya jaya ..."];
 
   const handleImagePress = index => {
     setSelectedImageIndex(index);
+  };
+
+  const handleSaveReport = async () => {
+    try {
+      console.log("hello");
+      console.log("reportName :", reportName);
+      console.log("id barang: ", id);
+      const { data } = await axios.post(
+        `${BASE_URL}/reports`,
+        {
+          PostId: id,
+          message: reportName,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            access_token: access_token,
+          },
+        }
+      );
+      console.log("data :", data);
+    } catch (err) {
+      console.log("err :", err);
+    }
   };
 
   const navigation = useNavigation();
@@ -129,7 +158,7 @@ const DetailsPage = ({ route }) => {
       const data = await AsyncStorage.getItem("data");
 
       const obj = JSON.parse(data);
-      console.log("obj :", obj);
+      //   console.log("obj :", obj);
 
       navigation.navigate("Chat", {
         id,
@@ -144,9 +173,22 @@ const DetailsPage = ({ route }) => {
     }
   };
 
-  function handleDelete() {
-    console.log("handleDelete");
-  }
+  const [visible, setVisible] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      console.log("handleDelete");
+      setVisible(true);
+      const data = await AsyncStorage.getItem("data");
+
+      const obj = JSON.parse(data);
+      // console.log("obj :", obj);
+      setAccess_token(obj.access_token);
+      console.log("access_token :", access_token);
+    } catch (err) {
+      console.log("err :", err);
+    }
+  };
   function handleStatus() {
     console.log("handleStatus");
   }
@@ -181,136 +223,141 @@ const DetailsPage = ({ route }) => {
 
   // return <Text>STOOOOOOPPPPPPPP</Text>;
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <View style={styles.container}>
-        <ScrollView>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{
-                uri: postDetailData?.images[selectedImageIndex],
-              }}
-              style={styles.selectedImage}
-            />
-            <View style={styles.thumbnailContainer}>
-              {postDetailData?.images.map((image, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleImagePress(index)}
-                >
-                  <Image
-                    source={{ uri: image }}
-                    style={[
-                      styles.thumbnailImage,
-                      selectedImageIndex === index && styles.selectedThumbnail,
-                    ]}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          <View style={styles.mapContainer}>
-            <Text style={styles.label}>Meeting Point</Text>
-            <View style={styles.map}>
-              <MapView
-                style={{ flex: 1 }}
-                region={{
-                  latitude: postDetailData?.meetingPoint.coordinates[1],
-                  longitude: postDetailData?.meetingPoint.coordinates[0],
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
+    <>
+      <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={styles.container}>
+          <ScrollView>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  uri: postDetailData?.images[selectedImageIndex],
                 }}
-              >
-                <Marker
-                  coordinate={{
+                style={styles.selectedImage}
+              />
+              <View style={styles.thumbnailContainer}>
+                {postDetailData?.images.map((image, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleImagePress(index)}
+                  >
+                    <Image
+                      source={{ uri: image }}
+                      style={[
+                        styles.thumbnailImage,
+                        selectedImageIndex === index &&
+                          styles.selectedThumbnail,
+                      ]}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+            <View style={styles.mapContainer}>
+              <Text style={styles.label}>Meeting Point</Text>
+              <View style={styles.map}>
+                <MapView
+                  style={{ flex: 1 }}
+                  region={{
                     latitude: postDetailData?.meetingPoint.coordinates[1],
                     longitude: postDetailData?.meetingPoint.coordinates[0],
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
                   }}
-                />
-              </MapView>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            style={styles.tradeButton}
-            onPress={handleTradeButton}
-          >
-            <Text style={styles.tradeText}>Trade Toys</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
-            <Text style={styles.tradeText}>Set Inactive</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleDelete}>
-            <Text style={styles.tradeText}>Delete</Text>
-          </TouchableOpacity>
-
-          <View style={styles.header}>
-            <View style={styles.avatarContainer}>
-              <Image
-                source={{ uri: postDetailData?.User?.profileImg }}
-                style={styles.avatar}
-              />
-            </View>
-            <View style={styles.infoContainer}>
-              <Text style={styles.name}>{postDetailData?.User.username}</Text>
-              <Text style={styles.bio}>
-                <StarRating
-                  disabled={true}
-                  maxStars={5}
-                  rating={ratingsAverageScore}
-                  starSize={20}
-                  fullStarColor={"#f1c40f"}
-                  emptyStarColor={"#ccc"}
-                  halfStarEnabled={true}
-                />
-              </Text>
-              <TouchableOpacity
-                style={styles.chatContainer}
-                onPress={() =>
-                  handleChat(
-                    postDetailData?.User?.id,
-                    postDetailData?.User?.name,
-                    postDetailData?.User?.profileImg
-                  )
-                }
-              >
-                <Text style={styles.chat}>Chat Now</Text>
-                <Icon name="message" style={styles.icon} size={22} />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.containerr}>
-            <View style={styles.box}>
-              {/* <Text style={styles.title}>Description</Text> */}
-              <Text style={styles.title}>{postDetailData?.title}</Text>
-              <Text style={styles.description}>
-                {postDetailData?.description}
-              </Text>
-              <Text style={styles.commentsHeader}>Comments</Text>
-              <View style={styles.commentContainerBack}>
-                {postDetailData?.Comments.map(comment => (
-                  <View key={comment.id} style={styles.commentContainer}>
-                    <Text style={styles.usernameComment}>
-                      {comment?.User.username}
-                    </Text>
-                    <Text style={styles.commentText}>{comment?.message}</Text>
-                  </View>
-                ))}
-                <View style={styles.inputCommentContainer}>
-                  <TextInput
-                    style={styles.textInputContainer}
-                    placeholder="Add a comment..."
-                    value={comment}
-                    onChangeText={text => setComment(text)}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: postDetailData?.meetingPoint.coordinates[1],
+                      longitude: postDetailData?.meetingPoint.coordinates[0],
+                    }}
                   />
-                  <TouchableOpacity>
-                    <Text style={styles.buttonText}>Post</Text>
-                  </TouchableOpacity>
+                </MapView>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.tradeButton}
+              onPress={handleTradeButton}
+            >
+              <Text style={styles.tradeText}>Request trade 🔁</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
+              <Text style={styles.tradeText}>Set Inactive</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={handleDelete}
+            >
+              <Text style={styles.tradeText}>Report❗️</Text>
+            </TouchableOpacity>
+
+            <View style={styles.header}>
+              <View style={styles.avatarContainer}>
+                <Image
+                  source={{ uri: postDetailData?.User?.profileImg }}
+                  style={styles.avatar}
+                />
+              </View>
+              <View style={styles.infoContainer}>
+                <Text style={styles.name}>{postDetailData?.User.username}</Text>
+                <Text style={styles.bio}>
+                  <StarRating
+                    disabled={true}
+                    maxStars={5}
+                    rating={ratingsAverageScore}
+                    starSize={20}
+                    fullStarColor={"#f1c40f"}
+                    emptyStarColor={"#ccc"}
+                    halfStarEnabled={true}
+                  />
+                </Text>
+                <TouchableOpacity
+                  style={styles.chatContainer}
+                  onPress={() =>
+                    handleChat(
+                      postDetailData?.User?.id,
+                      postDetailData?.User?.name,
+                      postDetailData?.User?.profileImg
+                    )
+                  }
+                >
+                  <Text style={styles.chat}>Chat Now</Text>
+                  <Icon name="message" style={styles.icon} size={22} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.containerr}>
+              <View style={styles.box}>
+                {/* <Text style={styles.title}>Description</Text> */}
+                <Text style={styles.title}>{postDetailData?.title}</Text>
+                <Text style={styles.description}>
+                  {postDetailData?.description}
+                </Text>
+                <Text style={styles.commentsHeader}>Comments</Text>
+                <View style={styles.commentContainerBack}>
+                  {postDetailData?.Comments.map(comment => (
+                    <View key={comment.id} style={styles.commentContainer}>
+                      <Text style={styles.usernameComment}>
+                        {comment?.User.username}
+                      </Text>
+                      <Text style={styles.commentText}>{comment?.message}</Text>
+                    </View>
+                  ))}
+                  <View style={styles.inputCommentContainer}>
+                    <TextInput
+                      style={styles.textInputContainer}
+                      placeholder="Add a comment..."
+                      value={comment}
+                      onChangeText={text => setComment(text)}
+                    />
+                    <TouchableOpacity>
+                      <Text style={styles.buttonText}>Post</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-          {/* <View style={styles.recommendContainer}>
+            {/* <View style={styles.recommendContainer}>
                         <View style={styles.recommendTextContainer}>
                             <Text style={styles.recommendText}>
                                 Toys You May Like
@@ -329,13 +376,92 @@ const DetailsPage = ({ route }) => {
                             </View>
                         </ScrollView>
                     </View> */}
-        </ScrollView>
-      </View>
-    </ScrollView>
+          </ScrollView>
+        </View>
+      </ScrollView>
+
+      {/* modal here */}
+      <Modal visible={visible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.judul}>Report item</Text>
+          <Image
+            source={{
+              uri: postDetailData?.images[0],
+            }}
+            style={styles.selectedImage}
+          />
+          <Text style={styles.barang}>Title: {postDetailData?.title}</Text>
+          <Image
+            style={styles.image}
+            source={{ uri: "https://via.placeholder.com/300" }}
+          />
+          <TextInput
+            style={styles.titleInput}
+            // value={title}
+            onChangeText={setReportName}
+            placeholder="Enter comment here.."
+          />
+          <View style={styles.konteiner}>
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={() => handleSaveReport()}
+            >
+              <Text style={styles.tombol}>Report</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => setVisible(false)}
+            >
+              <Text style={styles.tombol}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  backButton: {
+    backgroundColor: "#999",
+    padding: 6,
+    paddingVertical: 12,
+    borderRadius: 8,
+    width: "50%",
+    alignItems: "center",
+    marginLeft: 70,
+    marginTop: 10,
+  },
+  tombol: {
+    color: "#fff",
+  },
+  saveButton: {
+    backgroundColor: "#F68383",
+    padding: 6,
+    paddingVertical: 12,
+    borderRadius: 8,
+    width: "50%",
+    alignItems: "center",
+    marginLeft: 70,
+    marginTop: 70,
+  },
+  barang: {
+    marginTop: 26,
+    marginBottom: 24,
+  },
+  judul: {
+    fontSize: 36,
+    fontWeight: "bold",
+    marginBottom: 22,
+  },
+  modalContainer: {
+    // width: 10,
+    padding: 50,
+    marginTop: 10,
+    margin: 20,
+    backgroundColor: "#FFF8E7",
+    borderRadius: 18,
+  },
   recommendText: {
     textAlign: "left",
     fontSize: 28,
@@ -408,7 +534,7 @@ const styles = StyleSheet.create({
     width: 400,
     borderRadius: 12,
     backgroundColor: "#FFF8E7",
-    marginLeft: 16,
+    // marginLeft: 16,
     marginRight: 50,
   },
   map: {
@@ -492,12 +618,12 @@ const styles = StyleSheet.create({
   },
   selectedImage: {
     width: "100%",
-    height: 350,
+    height: 250,
     // resizeMode: "contain",
     borderWidth: 5,
     borderColor: "#FFFF",
     borderRadius: 18,
-    margin: 24,
+    // margin: 24,
     // marginHorizontal: 50,
   },
   thumbnailContainer: {

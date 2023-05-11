@@ -111,8 +111,7 @@ export default function MainStackNavigator() {
   //   getVerifiedStatus();
   // }, []);
   return (
-    
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
         name="Homes"
         component={HomeTabNavigator}

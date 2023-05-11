@@ -248,7 +248,7 @@ function Home({ posts, fetchPosts }) {
         <ScrollView>
           <Image
             source={{
-              uri: "https://images.unsplash.com/photo-1595950009887-e9842bcbc1ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+              uri: "https://i.ibb.co/sCv9DBc/michael-roring-2.png",
             }}
             style={styles.banner}
           />
