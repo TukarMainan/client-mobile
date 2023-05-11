@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import {
     View,
     Text,
@@ -22,7 +21,6 @@ import Logo from "../logo.png";
 import NearbyCard from "../components/NearbyCard";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
-import { fetchPosts } from "../stores/actions/actionCreator";
 import axios from "axios";
 import { BASE_URL } from "../config/api";
 
@@ -37,27 +35,28 @@ const conditions = [
     "heavily used",
 ];
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        fetchPosts: () => dispatch(fetchPosts()),
-    };
-};
-
-const mapStateToProps = (state) => {
-    return {
-        posts: state.posts,
-    };
-};
-
-function Home({ posts, fetchPosts }) {
-    const { loading: isLoading, posts: postsData } = posts;
-
+function Home() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [postsData, setPostsData] = useState([]);
     const [isLoadingNearby, setIsLoadingNearby] = useState(true);
     const [nearbyPosts, setNearbyPosts] = useState([]);
     const [location, setLocation] = useState(null);
 
+    async function fetchPosts() {
+        try {
+            const { data } = await axios.get(BASE_URL + "/public/posts");
+            console.log(data, "<<<<<<<<<<<<<<<<<<<<<<<<<< data all post");
+            setPostsData(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     async function fetchNearbyPost() {
         try {
+            console.log("<<<<<<<<<<<<<<<<<<< lagi proses fetch nearby posts");
             let latitude = location?.latitude || -6.2146;
             let longitude = location?.longitude || 106.8451;
             const { data } = await axios.get(
@@ -71,7 +70,7 @@ function Home({ posts, fetchPosts }) {
                     },
                 }
             );
-            console.log(data);
+            console.log(data, "<<<<<<<<<<<<<<<<<<<<<<<<<< data nearby post");
             setNearbyPosts(data);
         } catch (error) {
             console.log(error);
@@ -90,6 +89,10 @@ function Home({ posts, fetchPosts }) {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
             // Handle permission not granted error
+            setLocation({
+                latitude: null,
+                longitude: null,
+            });
             return;
         }
 
@@ -108,7 +111,7 @@ function Home({ posts, fetchPosts }) {
         }
     }, [location]);
 
-    if (isLoading && isLoadingNearby) {
+    if (isLoading || isLoadingNearby) {
         return (
             <View style={styles.spinnerContainer}>
                 <Spinner
@@ -557,4 +560,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
