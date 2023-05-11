@@ -17,28 +17,49 @@ import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import { BASE_URL } from "../config/api";
 import Logo from "../logo.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Request({ trades }) {
     const navigation = useNavigation();
-    function handleAccept() {
-        console.log("handle acc");
-    }
-    function handleReject() {
-        console.log("handleReject");
-    }
+    // function handleAccept() {
+    //     console.log("handle acc");
+    // }
+    // function handleReject() {
+    //     console.log("handleReject");
+    // }
 
     const handleItemPress = (id) => {
         navigation.navigate("Detail", { id });
     };
 
-    function handleComplete() {
-        navigation.navigate("Review");
-        console.log("complete");
+    async function handleComplete(id) {
+        try {
+            navigation.navigate("Review");
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    function handleChat() {
-        navigation.navigate("Chat");
-    }
+    const handleChat = async (id, name, image) => {
+        try {
+            console.log(id);
+            const data = await AsyncStorage.getItem("data");
+
+            const obj = JSON.parse(data);
+            //   console.log("obj :", obj);
+
+            navigation.navigate("Chat", {
+                id,
+                name,
+                image,
+                id_sendiri: obj.id,
+                name_sendiri: obj.username,
+                // image_sendiri: obj.profileImg,
+            });
+        } catch (err) {
+            console.log("err :", err);
+        }
+    };
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -79,7 +100,15 @@ export default function Request({ trades }) {
                                         </Text>
                                         <TouchableOpacity
                                             style={styles.description}
-                                            onPress={handleChat}
+                                            onPress={() =>
+                                                handleChat(
+                                                    item?.TargetPost?.User?.id,
+                                                    item?.TargetPost?.User
+                                                        ?.name,
+                                                    item?.TargetPost?.User
+                                                        ?.profileImg
+                                                )
+                                            }
                                         >
                                             <Text style={styles.reject}>
                                                 Chat User
@@ -90,7 +119,9 @@ export default function Request({ trades }) {
                                     <View style={styles.containerButton}>
                                         <TouchableOpacity
                                             style={styles.description}
-                                            onPress={handleComplete}
+                                            onPress={() => {
+                                                handleComplete;
+                                            }}
                                         >
                                             <Text style={styles.font}>
                                                 Complete
@@ -98,7 +129,15 @@ export default function Request({ trades }) {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={styles.description}
-                                            onPress={handleChat}
+                                            onPress={() =>
+                                                handleChat(
+                                                    item?.TargetPost?.User?.id,
+                                                    item?.TargetPost?.User
+                                                        ?.name,
+                                                    item?.TargetPost?.User
+                                                        ?.profileImg
+                                                )
+                                            }
                                         >
                                             <Text style={styles.reject}>
                                                 Chat User

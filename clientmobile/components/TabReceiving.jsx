@@ -75,9 +75,26 @@ export default function Request({ trades }) {
         console.log("complete");
     }
 
-    function handleChat() {
-        navigation.navigate("Chat");
-    }
+    const handleChat = async (id, name, image) => {
+        try {
+            console.log(id);
+            const data = await AsyncStorage.getItem("data");
+
+            const obj = JSON.parse(data);
+            console.log("obj :", obj);
+
+            navigation.navigate("Chat", {
+                id,
+                name,
+                image,
+                id_sendiri: obj.id,
+                name_sendiri: obj.username,
+                // image_sendiri: obj.profileImg,
+            });
+        } catch (err) {
+            console.log("err :", err);
+        }
+    };
 
     return (
         <ScrollView>
@@ -125,6 +142,21 @@ export default function Request({ trades }) {
                                                     Reject
                                                 </Text>
                                             </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={styles.description}
+                                                onPress={() =>
+                                                    handleChat(
+                                                        item?.SenderUserId,
+                                                        item?.SenderUser?.name,
+                                                        item?.SenderUser
+                                                            ?.profileImg
+                                                    )
+                                                }
+                                            >
+                                                <Text style={styles.reject}>
+                                                    Chat User
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     </>
                                 ) : (
@@ -139,7 +171,13 @@ export default function Request({ trades }) {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={styles.description}
-                                            onPress={handleChat}
+                                            onPress={() =>
+                                                handleChat(
+                                                    item?.SenderUserId,
+                                                    item?.SenderUser?.name,
+                                                    item?.SenderUser?.profileImg
+                                                )
+                                            }
                                         >
                                             <Text style={styles.reject}>
                                                 Chat User
@@ -206,7 +244,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
     },
     containerButton: {
-        flexDirection: "row",
+        flexDirection: "column",
         marginRight: 100,
         paddingRight: 200,
         height: 1,
