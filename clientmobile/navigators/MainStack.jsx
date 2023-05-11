@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -25,6 +25,7 @@ import StorageScreen from "../screens/Storage";
 import ModalProfile from "../screens/ProfileModal";
 import TradeScreen from "../screens/TradeScreen";
 import Review from "../screens/Review";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -89,7 +90,26 @@ function HomeTabNavigator() {
   );
 }
 
+// const data = await AsyncStorage.getItem("data");
+// const obj = JSON.parse(data);
+// console.log(obj," ini adalah obj");
 export default function MainStackNavigator() {
+  // const [verified, setVerified] = useState(false);
+
+  // useEffect(() => {
+  //   async function getVerifiedStatus() {
+  //     try {
+  //       const token = await AsyncStorage.getItem("data");
+  //       if (token) {
+  //         console.log(token);
+  //         setVerified(true);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   getVerifiedStatus();
+  // }, []);
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
