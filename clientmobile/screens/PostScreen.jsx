@@ -29,8 +29,10 @@ import {
   MenuOptions,
   MenuOption,
 } from "react-native-popup-menu";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Post() {
+  const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [condition, setSelectedCondition] = useState("");
