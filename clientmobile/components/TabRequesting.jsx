@@ -52,27 +52,16 @@ export default function Request({trades}){
                 </TouchableOpacity>
                 <View style={styles.containerFill}>
                   <View style={styles.descContain}>
-                    <Text style={styles.fontDesc}>Requesting trade to {item?.TargetPost?.User.username} </Text>
+                    <Text style={styles.fontDesc}>Requesting trade to {item?.TargetPost?.User?.username} </Text>
                     <Text style={styles.fontTitle}>{item?.TargetPost?.title}</Text>
                     <Text style={styles.fontdes}>
                     {item?.TargetPost?.description}
                     </Text>
                   </View>
-                  <View style={styles.containerButton}>
-                    <TouchableOpacity
-                      style={styles.description}
-                      onPress={handleAccept}
-                    >
-                      <Text style={styles.font}>Accept</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.description}
-                      onPress={handleReject}
-                    >
-                      <Text style={styles.reject}>Reject</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.containerButton}>
+                  {trades.Status === 'requesting' ? (
+                  <Text style={{fontSize:50}} >Requesting ...</Text>
+                  ) : (
+                    <View style={styles.containerButton}>
                     <TouchableOpacity
                       style={styles.description}
                       onPress={handleComplete}
@@ -87,6 +76,9 @@ export default function Request({trades}){
                     </TouchableOpacity>
                    
                   </View>
+                  ) }
+                  
+                  
                 </View>
               </View>
             );

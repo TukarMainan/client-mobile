@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { GEO_API_REVERSE_LOCATION } from "../config/api";
 
 export default function Card({ item }) {
-  console.log("item :", item);
+  // console.log("item :", item);
   const [locationName, setLocationName] = useState("");
   const itemCreatedAt = item?.Category?.createdAt;
   const currentDate = new Date();
