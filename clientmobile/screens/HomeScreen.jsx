@@ -25,6 +25,7 @@ import * as Location from "expo-location";
 import { fetchPosts } from "../stores/actions/actionCreator";
 import axios from "axios";
 import { BASE_URL } from "../config/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
 const categories = ["Technology", "Fashion", "Food", "Travel", "Sports"];
@@ -58,15 +59,15 @@ function Home({ posts, fetchPosts }) {
 
   async function fetchNearbyPost() {
     try {
-      let latitude = location?.latitude || -6.2146;
-      let longitude = location?.longitude || 106.8451;
+      const token = await AsyncStorage.getItem("data");
+            const parsedData = JSON.parse(token);
+            // console.log(parsedData.access_token);
       const { data } = await axios.get(BASE_URL + "/public/posts/nearby", {
         headers: {
-          location: JSON.stringify({
-            latitude,
-            longitude,
-          }),
-        },
+          access_token: parsedData.access_token,
+          // access_token:
+          //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4MzgxMTE0MH0.V03Ya0TWOtGTX6iAMAh7s_tyXgro4bbFvBR-tnoaWfs",
+      },
       });
       // console.log(data);
       setNearbyPosts(data);

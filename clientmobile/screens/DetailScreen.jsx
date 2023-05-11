@@ -58,14 +58,15 @@ const DetailsPage = ({ route }) => {
   }, [isLoading]);
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [access_token, setAccess_token] = useState("");
+  // const [access_token, setAccess_token] = useState("");
   const [comment, setComment] = useState("");
+  const [commentPost, setCommentPost] = useState("");
   const [PostId, setPostId] = useState("");
   const [reportName, setReportName] = useState("");
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const commentt = ["Aku cinta hacktiv8", "TukarMainan Jaya jaya jaya ..."];
-
+  const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNkMTMxZWUwLTZmMTYtNGZjNy1hMDMzLWZhOGUwNmFjZDE3MiIsImlhdCI6MTY4MzgzMzU3OH0.vrJ7UUpiFx6jwE4Vpq4UHah0vZvMIMpfkPLiuWMPb_g"
   const handleImagePress = index => {
     setSelectedImageIndex(index);
   };
@@ -88,6 +89,31 @@ const DetailsPage = ({ route }) => {
           },
         }
       );
+      console.log("data :", data);
+      
+    } catch (err) {
+      console.log("err :", err);
+    } finally {
+      setVisible(false)
+    }
+  };
+  const handleSaveComment = async () => {
+    try {
+      console.log(commentPost,id)
+      const { data } = await axios.post(
+        `${BASE_URL}/comments`,
+        {
+            message:commentPost,
+            PostId:id          
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            access_token: access_token,
+          },
+        }
+      );
+      fetchPostDetail(id)
       console.log("data :", data);
     } catch (err) {
       console.log("err :", err);
@@ -347,10 +373,13 @@ const DetailsPage = ({ route }) => {
                     <TextInput
                       style={styles.textInputContainer}
                       placeholder="Add a comment..."
-                      value={comment}
-                      onChangeText={text => setComment(text)}
+                      value={commentPost}
+                      onChangeText={text => setCommentPost(text)}
                     />
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{
+                        handleSaveComment()
+                        setCommentPost("")
+                      }}>
                       <Text style={styles.buttonText}>Post</Text>
                     </TouchableOpacity>
                   </View>
