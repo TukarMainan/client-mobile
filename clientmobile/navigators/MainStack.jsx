@@ -90,10 +90,19 @@ function HomeTabNavigator() {
   );
 }
 
-// const data = await AsyncStorage.getItem("data");
-// const obj = JSON.parse(data);
-// console.log(obj," ini adalah obj");
 export default function MainStackNavigator() {
+  async function isAlreadyLogin() {
+    try {
+      const data = await AsyncStorage.getItem("data");
+      const parsedData = JSON.parse(data);
+      if (parsedData.hasOwnProperty("access_token")) {
+        console.log("AAAAAAAAAAAAADDDDDDDDDDDDDDAAAAAAAAAAAAAAAAAA AAAAAACCCCCEEEEEESSSSSSTTTTTTOOOOOOKKKKKKKKKKEEEEEEEEEENNNNNNNNNNNNNN");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  isAlreadyLogin()
   // const [verified, setVerified] = useState(false);
 
   // useEffect(() => {
