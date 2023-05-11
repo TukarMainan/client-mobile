@@ -19,6 +19,7 @@ import axios from "axios";
 import { BASE_URL } from "../config/api";
 import Logo from "../logo.png";
 import TabRequesting from '../components/TabRequesting'
+import TabReceiving from '../components/TabReceiving'
 const DATA = [
   {
     id: "1",
@@ -67,12 +68,11 @@ const DATA = [
 ];
 
 
-
-
-
 export default function Trade({ route }) {
   const [isTradesLoading, setIsTradesLoading] = useState(true);
+  const [isTradesTargetLoading, setIsTradesTargetLoading] = useState(true);
   const [trades, setTrades] = useState([]);
+  const [tradesTarget, setTradesTarget] = useState([]);
 
   async function fetchTrades() {
     try {
@@ -89,8 +89,25 @@ export default function Trade({ route }) {
     }
   }
 
+  async function fetchTradesTarget() {
+    try {
+      const {data} = await axios.get(BASE_URL + "/trades/target", {
+        headers: {
+          access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNkMTMxZWUwLTZmMTYtNGZjNy1hMDMzLWZhOGUwNmFjZDE3MiIsImlhdCI6MTY4MzgzMzU3OH0.vrJ7UUpiFx6jwE4Vpq4UHah0vZvMIMpfkPLiuWMPb_g"
+        }
+      });
+      console.log(data);
+      setTradesTarget(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsTradesTargetLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchTrades();
+    fetchTradesTarget()
   }, [])
   //   const { item } = route.params;
 const [isVisible,setIsVisible]= useState(true)
@@ -120,6 +137,16 @@ const [loc,setLoc] = useState({
     navigation.navigate('Chat')
   }
 
+  const [activeTab, setActiveTab] = useState('requesting');
+
+  const handleRequestingTabPress = () => {
+    setActiveTab('requesting');
+  };
+
+  const handleReceivingTabPress = () => {
+    setActiveTab('receiving');
+  };
+
   // async function location(){ // api geopify
   //   try {
   //     const {data} = await axios.get(` https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=90b53ef2d7a44347866db01870984c32`)
@@ -133,7 +160,7 @@ const [loc,setLoc] = useState({
   //   }
   // }
 
-  if (isTradesLoading) {
+  if (isTradesLoading || isTradesTargetLoading) {
     return (
         <View style={styles.spinnerContainer}>
             <Spinner
@@ -207,9 +234,14 @@ const [loc,setLoc] = useState({
           })}
         </View>
       </ScrollView> */}
-      <Button title="Requesting" />
-      <Button title="Accept Request" />
-      <TabRequesting trades={trades} />
+       <View>
+      <View>
+        <Button title="On going request" onPress={handleRequestingTabPress} />
+        <Button title="Incoming request" onPress={handleReceivingTabPress} />
+      </View>
+      {activeTab === 'requesting' && <TabRequesting trades={trades} />}
+      {activeTab === 'receiving' && <TabReceiving trades={tradesTarget} />}
+    </View>
       <Modal
       animationType="fade"
       transparent={true}
