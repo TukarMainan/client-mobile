@@ -1,11 +1,11 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableOpacity,
-  Image,
+    StyleSheet,
+    Text,
+    View,
+    Button,
+    TouchableOpacity,
+    Image,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -31,105 +31,112 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function HomeTabNavigator() {
-  return (
-    <Tab.Navigator
-      initialRouteName="Homee"
-      screenOptions={{
-        activeTintColor: "#ffffff",
-        inactiveTintColor: "#8e8e93",
-      }}
-    >
-      <Tab.Screen
-        name="Homee"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="home" color={color} size={24} />
-          ),
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Order"
-        component={OrderScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="bell" color={color} size={24} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Post"
-        component={PostScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="plus" color={color} size={24} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Message"
-        component={MessageScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="message" color={color} size={24} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="account" color={color} size={24} />
-          ),
-          headerShown: false,
-        }}
-      />
-    </Tab.Navigator>
-  );
+    return (
+        <Tab.Navigator
+            initialRouteName="Homee"
+            screenOptions={{
+                activeTintColor: "#ffffff",
+                inactiveTintColor: "#8e8e93",
+            }}
+        >
+            <Tab.Screen
+                name="Homee"
+                component={HomeScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="home" color={color} size={24} />
+                    ),
+                    headerShown: false,
+                }}
+            />
+            <Tab.Screen
+                name="Order"
+                component={OrderScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="bell" color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Post"
+                component={PostScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="plus" color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Message"
+                component={MessageScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="message" color={color} size={24} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="account" color={color} size={24} />
+                    ),
+                    headerShown: false,
+                }}
+            />
+        </Tab.Navigator>
+    );
 }
 
-// const data = await AsyncStorage.getItem("data");
-// const obj = JSON.parse(data);
-// console.log(obj," ini adalah obj");
 export default function MainStackNavigator() {
-  // const [verified, setVerified] = useState(false);
+    // const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // async function isAlreadyLogin() {
+    //     try {
+    //         // await AsyncStorage.removeItem("data");
+    //         const data = await AsyncStorage.getItem("data");
+    //         const parsedData = JSON.parse(data);
+    //         if (parsedData) {
+    //             console.log(parsedData);
+    //             setIsAuthenticated(true);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+    // useEffect(() => {
+    //     isAlreadyLogin();
+    // });
+    return (
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+              name="Homes"
+              component={HomeTabNavigator}
+              options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Order" component={OrderScreen} />
+          <Stack.Screen name="Post" component={PostScreen} />
+          <Stack.Screen name="Message" component={Message} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Chat" component={ChatComponents} />
 
-  // useEffect(() => {
-  //   async function getVerifiedStatus() {
-  //     try {
-  //       const token = await AsyncStorage.getItem("data");
-  //       if (token) {
-  //         console.log(token);
-  //         setVerified(true);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  //   getVerifiedStatus();
-  // }, []);
-  return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen
-        name="Homes"
-        component={HomeTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen name="Order" component={OrderScreen} />
-      <Stack.Screen name="Post" component={PostScreen} />
-      <Stack.Screen name="Message" component={Message} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="Chat" component={ChatComponents} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="Detail" component={DetailScreen} />
-      <Stack.Screen name="Camera" component={CameraScreen} />
-      <Stack.Screen name="Storage" component={StorageScreen} />
-      <Stack.Screen name="Modal" component={ModalProfile} />
-      <Stack.Screen name="Trade" component={TradeScreen} />
-      <Stack.Screen name="Review" component={Review} />
-    </Stack.Navigator>
-  );
+          <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="Storage" component={StorageScreen} />
+          <Stack.Screen name="Modal" component={ModalProfile} />
+          <Stack.Screen name="Trade" component={TradeScreen} />
+          <Stack.Screen name="Review" component={Review} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          {/* {isAuthenticated ? (
+            <>
+            </>
+          ) : (
+            <>
+            
+            </>
+          )} */}
+        </Stack.Navigator>
+    );
 }
