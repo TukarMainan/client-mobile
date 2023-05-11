@@ -377,7 +377,7 @@ const DetailsPage = ({ route }) => {
                             </View>
                         </View>
                     </View>
-                    <View style={styles.recommendContainer}>
+                    {/* <View style={styles.recommendContainer}>
                         <View style={styles.recommendTextContainer}>
                             <Text style={styles.recommendText}>
                                 Toys You May Like
@@ -395,7 +395,7 @@ const DetailsPage = ({ route }) => {
                                 ))}
                             </View>
                         </ScrollView>
-                    </View>
+                    </View> */}
                 </ScrollView>
             </View>
         </ScrollView>
