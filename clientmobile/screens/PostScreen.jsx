@@ -19,7 +19,8 @@ import Logo from "../logo.png";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-
+import axios from "axios";
+import FormData from "form-data";
 import { Camera } from "expo-camera";
 import {
   Menu,
@@ -28,14 +29,15 @@ import {
   MenuOptions,
   MenuOption,
 } from "react-native-popup-menu";
+
 export default function Post() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [condition, setSelectedCondition] = useState("");
-  const [category, setSelectedCategory] = useState("");
+  const [category, setSelectedCategory] = useState([]);
   const [image, setImage] = useState([]);
   const [imageCam, setImageCam] = useState([]);
-  const [city, setSelectedCity] = useState("");
+  const [city, setSelectedCity] = useState([]);
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [pictureData, setPictureData] = useState(null);
@@ -50,28 +52,49 @@ export default function Post() {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [visible, setVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
+  const [isLoadingGetProvinceName, setIsLoadingGetProvinceName] =
+    useState(true);
+
+  const BASE_URL = "http://54.169.72.32";
 
   let cameraRef = useRef(null);
 
   const handlePost = async () => {
+    console.log("imageCam :", imageCam);
+    console.log("image :", image);
+    console.log(title);
+    console.log(description);
+    console.log(condition);
+    console.log(category);
+    console.log(meetingPoint);
+    // variabel take picture
+    const data = new FormData();
+
+    for (const itemImage of image) {
+      data.append("images", itemImage);
+    }
+    data.append("title", title);
+    data.append("description", description);
+    data.append("condition", condition);
+    data.append("CategoryId", category);
+    data.append("meetingPoint", JSON.stringify(meetingPoint));
+    data.append("price", 0);
+
+    // console.log(imageCam);
     try {
-      // const { data } = await axios({
-      //   url: "http://localhost:3001/user",
-      //   method: "POST",
-      //   data: {
-      //     username: username,
-      //     password: password,
-      //   },
-      // });
-      console.log(
-        title,
-        description,
-        condition,
-        city,
-        category,
-        status,
-        meetingPoint
-      );
+      await axios({
+        url: `${BASE_URL}/posts`,
+        method: "POST",
+        data: data,
+        headers: {
+          access_token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4Mzc4MzQ2MX0.g3JCpM4XJB1ZKQAaZ71m8q7zPBYLv2XIfo191lhzRJg",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("imageCam :", imageCam);
+
       navigation.navigate("Homes");
     } catch (error) {
       Alert.alert(
@@ -81,9 +104,9 @@ export default function Post() {
       );
     }
   };
+
   useEffect(() => {
     setIsLoading(true);
-
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -94,6 +117,102 @@ export default function Post() {
     })();
   }, []);
 
+  function handleDescAI() {
+    console.log(description);
+  }
+  const takePicture = async () => {
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setImageCam(prevImages => [...prevImages, photo]);
+      console.log("masuk sini");
+      setShowPreview(true);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      multiple: true,
+    });
+
+    // if (!result.canceled) {
+    //   setImage([...image, ...result.assets]);
+    // }
+
+    if (!result.canceled) {
+      const { uri } = result.assets[0];
+      const ext = uri.split(".").pop();
+      const name = uri.split("/").pop();
+      setImage([
+        ...image,
+        {
+          uri: uri,
+          type: `image/${ext}`,
+          name,
+        },
+      ]);
+    }
+  };
+
+  const flipCamera = () => {
+    setType(
+      type === Camera.Constants.Type.back
+        ? Camera.Constants.Type.front
+        : Camera.Constants.Type.back
+    );
+  };
+
+  const savePicture = async () => {
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setImageCam(prevImages => [...prevImages, photo]);
+      console.log("masuk save");
+      setShowPreview(false);
+      setShowCamera(false);
+    }
+  };
+
+  function handleRetake() {
+    setImageCam([]);
+    setShowPreview(false);
+  }
+
+  const getProvince = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://api.binderbyte.com/wilayah/provinsi?api_key=4e0c6a16ef4bf423bed33526e47e8095769019b9e42729c5b4ded70c54cc8ae2"
+      );
+
+      // const provinceNames = data.value.map(province => province.name);
+      // const provinceId = data.value.map(province => province.id);
+
+      const province = data.value.map(province => {
+        return {
+          id: province.id,
+          name: province.name,
+        };
+      });
+
+      // console.log("provinceNames :");
+      setSelectedCity(province);
+    } catch (err) {
+      console.log("err: ", err);
+    } finally {
+      setIsLoadingGetProvinceName(false);
+    }
+  };
+
+  useEffect(() => {
+    getProvince();
+    // console.log("city: ", city);
+  }, [isLoading]);
+
+  // console.log("Category: ", category);
+  // const canEdit = userId === postUserId
+  // canEdit && following condition
   if (isLoading) {
     return (
       <View style={styles.spinnerContainer}>
@@ -110,88 +229,37 @@ export default function Post() {
     );
   }
 
-  function handleDescAI() {
-    console.log(description);
-  }
-  const takePicture = async () => {
-    if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      setImageCam(prevImages => [...prevImages, photo]);
-      console.log('masuk sini');
-      setShowPreview(true);
-    }
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      multiple: true,
-    });
-
-    if (!result.canceled) {
-      setImage([...image, ...result.assets]);
-    }
-  };
-
-  const flipCamera = () => {
-    setType(
-      type === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back
-    );
-  };
-
-  const savePicture = async () => {
-    if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      setImageCam(prevImages => [...prevImages, photo]);
-      console.log('masuk save');
-      setShowPreview(false);
-      setShowCamera(false)
-    }
-  };
-
-  function handleRetake() {
-    setImageCam([]);
-    setShowPreview(false);
-  }
-
-  // const canEdit = userId === postUserId
-  // canEdit && following condition
   return (
     <>
       <ScrollView style={styles.container}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.titleLabel}>Toy name</Text>
-          <TextInput
-            placeholder="Enter toy name"
-            style={styles.input}
-            value={title}
-            onChangeText={text => setTitle(text)}
-          />
-        </View>
+        {/* <View style={styles.inputContainer}> */}
+        <Text style={styles.titleLabel}>Toy name</Text>
+        <TextInput
+          placeholder="Enter toy name"
+          style={styles.input}
+          value={title}
+          onChangeText={text => setTitle(text)}
+        />
+        {/* </View> */}
 
-        <View style={styles.descAI}>
+        {/* <View style={styles.descAI}>
           <Text onPress={handleDescAI}>Generate Title With AI</Text>
-        </View>
+        </View> */}
 
-        <View style={styles.inputDescription}>
-          <Text style={styles.descriptionTitle}>Description</Text>
-          <TextInput
-            numberOfLines={4}
-            placeholder="Description"
-            style={styles.descIn}
-            value={description}
-            onChangeText={text => setDescription(text)}
-            multiline={true}
-          />
-        </View>
-        <View style={styles.descAI}>
+        {/* <View style={styles.inputDescription}> */}
+        <Text style={styles.descriptionTitle}>Description</Text>
+        <TextInput
+          numberOfLines={4}
+          placeholder="Description"
+          style={styles.descIn}
+          value={description}
+          onChangeText={text => setDescription(text)}
+          multiline={true}
+        />
+        {/* </View> */}
+        {/* <View style={styles.descAI}>
           <Text onPress={handleDescAI}>Generate Description With AI</Text>
-        </View>
+        </View> */}
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Condition</Text>
@@ -202,14 +270,16 @@ export default function Post() {
               setSelectedCondition(itemValue)
             }
           >
-            <Picker.Item label="Select a Category" value="" enabled={false} />
-            <Picker.Item label="Option 1" value="option1" />
-            <Picker.Item label="Option 2" value="option2" />
-            <Picker.Item label="Option 3" value="option3" />
+            <Picker.Item label="Select condition" value="" enabled={false} />
+            <Picker.Item label="Brand new" value="brand new" />
+            <Picker.Item label="Like new" value="like new" />
+            <Picker.Item label="Lightly used" value="lightly used" />
+            <Picker.Item label="Well used" value="well used" />
+            <Picker.Item label="Heavily used" value="heavily used" />
           </Picker>
         </View>
 
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>City</Text>
           <Picker
             style={styles.dropdown}
@@ -218,11 +288,13 @@ export default function Post() {
           >
             <Picker.Item label="Select a City" value="" enabled={false} />
 
-            <Picker.Item label="Option 1" value="option1" />
-            <Picker.Item label="Option 2" value="option2" />
-            <Picker.Item label="Option 3" value="option3" />
+            {city.map(province => {
+              return (
+                <Picker.Item label={province.name} value={province.province} />
+              );
+            })}
           </Picker>
-        </View>
+        </View> */}
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Category</Text>
@@ -233,10 +305,19 @@ export default function Post() {
               setSelectedCategory(itemValue)
             }
           >
-            <Picker.Item label="Select a Category" value="" enabled={false} />
-            <Picker.Item label="Option 1" value="option1" />
-            <Picker.Item label="Option 2" value="option2" />
-            <Picker.Item label="Option 3" value="option3" />
+            <Picker.Item label="Select category" value="" enabled={false} />
+            <Picker.Item
+              value="e759b264-980a-4d0a-90a4-cd484beffe49"
+              label="Boys"
+            />
+            <Picker.Item
+              value="8741881b-59ce-4d9e-b8e0-07d037511022"
+              label="Girls"
+            />
+            <Picker.Item
+              value="a7bb0fc2-c23f-4602-9e3c-318476e41e4b"
+              label="Neutral"
+            />
           </Picker>
         </View>
 
@@ -254,38 +335,42 @@ export default function Post() {
           </Text>
         </TouchableOpacity>
         <View>
-          
-        {image.length > 0 && (
-          <View style={styles.resultContainer}>
-            <FlatList
-              data={image}
-              keyExtractor={item => item.uri}
-              numColumns={3}
-              renderItem={({ item }) => {
-               return <Image source={{ uri: item.uri }} style={styles.imageResult} />
-              }}
-            />
-          </View>
-        )}
+          {image.length > 0 && (
+            <View style={styles.resultContainer}>
+              <FlatList
+                data={image}
+                keyExtractor={item => item.uri}
+                numColumns={3}
+                renderItem={({ item }) => {
+                  return (
+                    <Image
+                      source={{ uri: item.uri }}
+                      style={styles.imageResult}
+                    />
+                  );
+                }}
+              />
+            </View>
+          )}
         </View>
         <View>
-        {imageCam.length > 0 && (
-          <View style={styles.resultContainer}>
-            <FlatList
-              data={imageCam}
-              keyExtractor={item => item.uri}
-              numColumns={3}
-              renderItem={({ item }) => {
-                return (
-                  <Image
-                    source={{ uri: item.uri }}
-                    style={styles.imageResult}
-                  />
-                );
-              }}
-            />
-          </View>
-        )}
+          {imageCam.length > 0 && (
+            <View style={styles.resultContainer}>
+              <FlatList
+                data={imageCam}
+                keyExtractor={item => item.uri}
+                numColumns={3}
+                renderItem={({ item }) => {
+                  return (
+                    <Image
+                      source={{ uri: item.uri }}
+                      style={styles.imageResult}
+                    />
+                  );
+                }}
+              />
+            </View>
+          )}
         </View>
 
         <View style={styles.mapContainer}>
@@ -345,7 +430,9 @@ export default function Post() {
       <Modal visible={showPreview} animationType="slide">
         <View style={styles.preview}>
           {imageCam.map(img => {
-            return <Image source={{ uri: img.uri }} style={styles.previewImage} />
+            return (
+              <Image source={{ uri: img.uri }} style={styles.previewImage} />
+            );
           })}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.retakeTouch} onPress={handleRetake}>
@@ -485,7 +572,7 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    marginTop: 30,
+    // marginTop: 30,
     borderRadius: 12,
     backgroundColor: "#f2f2f2",
     width: "90%",
@@ -518,29 +605,34 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: "left",
     marginBottom: 20,
+    marginLeft: 18,
   },
   descIn: {
     width: "90%",
     borderRadius: 5,
     marginBottom: 30,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
 
     // paddingLeft: 15,
     // paddingBottom: 6,
     height: 90,
+    marginLeft: 18,
   },
   input: {
     borderRadius: 5,
-    marginBottom: 30,
+    // marginBottom: 30,
     fontSize: 16,
     // paddingLeft: 15,
     // paddingBottom: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     width: "90%",
-    // height: 40,
-    marginLeft:15,
-  
+    height: 40,
+    // marginRight: 50,
+    marginLeft: 18,
+    paddingLeft: 6,
+    marginBottom: 20,
+    marginTop: 6,
   },
 
   button: {
@@ -570,7 +662,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft:5
+    paddingLeft: 5,
   },
   labelInputImage: {
     fontSize: 18,
@@ -587,8 +679,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 28,
+    marginBottom: 4,
+
     // paddingBottom: 4,
+    marginLeft: 18,
+    paddingLeft: 8,
   },
   mapContainer: {
     borderWidth: 1,
