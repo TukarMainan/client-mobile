@@ -97,11 +97,13 @@ export default function Post() {
 
       navigation.navigate("Homes");
     } catch (error) {
-      Alert.alert(
-        "Fields must be filled ",
-        "Please enter a valid username and password.",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
+      // ! Bug alert masih keluar setelah create posts berhasil
+
+      // Alert.alert(
+      //   "Fields must be filled ",
+      //   "Please enter a valid username and password.",
+      //   [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      // );
     }
   };
 
