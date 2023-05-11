@@ -60,29 +60,32 @@ export default function Post() {
   let cameraRef = useRef(null);
 
   const handlePost = async () => {
-    // console.log("imageCam :", imageCam);
-
-    // console.log("image :", image);
+    console.log("imageCam :", imageCam);
+    console.log("image :", image);
+    console.log(title);
+    console.log(description);
+    console.log(condition);
+    console.log(category);
+    console.log(meetingPoint);
     // variabel take picture
-
     const data = new FormData();
 
-    const imageArr = [...imageCam, ...image];
-    console.log("imageCam :", imageCam);
+    for (const itemImage of image) {
+      data.append("images", itemImage);
+    }
     data.append("title", title);
     data.append("description", description);
     data.append("condition", condition);
-    data.append("images", imageCam[0]);
     data.append("CategoryId", category);
     data.append("meetingPoint", JSON.stringify(meetingPoint));
     data.append("price", 0);
 
-    console.log("meetingPoint :", meetingPoint);
+    // console.log(imageCam);
     try {
       await axios({
         url: `${BASE_URL}/posts`,
         method: "POST",
-        data,
+        data: data,
         headers: {
           access_token:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4Mzc4MzQ2MX0.g3JCpM4XJB1ZKQAaZ71m8q7zPBYLv2XIfo191lhzRJg",
@@ -143,11 +146,14 @@ export default function Post() {
       const { uri } = result.assets[0];
       const ext = uri.split(".").pop();
       const name = uri.split("/").pop();
-      setImage({
-        uri: uri,
-        type: `image/${ext}`,
-        name,
-      });
+      setImage([
+        ...image,
+        {
+          uri: uri,
+          type: `image/${ext}`,
+          name,
+        },
+      ]);
     }
   };
 
@@ -226,31 +232,31 @@ export default function Post() {
   return (
     <>
       <ScrollView style={styles.container}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.titleLabel}>Toy name</Text>
-          <TextInput
-            placeholder="Enter toy name"
-            style={styles.input}
-            value={title}
-            onChangeText={text => setTitle(text)}
-          />
-        </View>
+        {/* <View style={styles.inputContainer}> */}
+        <Text style={styles.titleLabel}>Toy name</Text>
+        <TextInput
+          placeholder="Enter toy name"
+          style={styles.input}
+          value={title}
+          onChangeText={text => setTitle(text)}
+        />
+        {/* </View> */}
 
         {/* <View style={styles.descAI}>
           <Text onPress={handleDescAI}>Generate Title With AI</Text>
         </View> */}
 
-        <View style={styles.inputDescription}>
-          <Text style={styles.descriptionTitle}>Description</Text>
-          <TextInput
-            numberOfLines={4}
-            placeholder="Description"
-            style={styles.descIn}
-            value={description}
-            onChangeText={text => setDescription(text)}
-            multiline={true}
-          />
-        </View>
+        {/* <View style={styles.inputDescription}> */}
+        <Text style={styles.descriptionTitle}>Description</Text>
+        <TextInput
+          numberOfLines={4}
+          placeholder="Description"
+          style={styles.descIn}
+          value={description}
+          onChangeText={text => setDescription(text)}
+          multiline={true}
+        />
+        {/* </View> */}
         {/* <View style={styles.descAI}>
           <Text onPress={handleDescAI}>Generate Description With AI</Text>
         </View> */}
@@ -566,7 +572,7 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    marginTop: 30,
+    // marginTop: 30,
     borderRadius: 12,
     backgroundColor: "#f2f2f2",
     width: "90%",
@@ -599,28 +605,34 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: "left",
     marginBottom: 20,
+    marginLeft: 18,
   },
   descIn: {
     width: "90%",
     borderRadius: 5,
     marginBottom: 30,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
 
     // paddingLeft: 15,
     // paddingBottom: 6,
     height: 90,
+    marginLeft: 18,
   },
   input: {
     borderRadius: 5,
-    marginBottom: 30,
+    // marginBottom: 30,
     fontSize: 16,
     // paddingLeft: 15,
     // paddingBottom: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#f2f2f2",
     width: "90%",
-    // height: 40,
-    marginLeft: 15,
+    height: 40,
+    // marginRight: 50,
+    marginLeft: 18,
+    paddingLeft: 6,
+    marginBottom: 20,
+    marginTop: 6,
   },
 
   button: {
@@ -667,8 +679,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 28,
+    marginBottom: 4,
+
     // paddingBottom: 4,
+    marginLeft: 18,
+    paddingLeft: 8,
   },
   mapContainer: {
     borderWidth: 1,
