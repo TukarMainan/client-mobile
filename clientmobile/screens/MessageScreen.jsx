@@ -11,13 +11,32 @@ import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import * as TalkRn from "@talkjs/expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MessagesScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [id, setId] = useState();
+  const [username, setUsername] = useState();
+
+  const triggerData = async () => {
+    try {
+      const data = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(data);
+      setId(obj.id);
+      setUsername(obj.username);
+      // console.log("obj di room list :", obj);
+    } catch (err) {
+      console.log("err :", err);
+    }
+  };
+
+  useEffect(() => {
+    triggerData();
+  }, []);
 
   const me = {
-    id: "123456789",
-    name: "Alice",
+    id,
+    name: username,
     email: "alice@example.com",
     photoUrl: "https://talkjs.com/images/avatar-1.jpg",
     welcomeMessage: "Hey there! How are you? :-)",
@@ -79,10 +98,14 @@ export default function MessagesScreen({ navigation }) {
         me={me}
         onSelectConversation={conversation => {
           const user = conversation.others[0];
+          console.log("user :", user);
           const obj = {
             id: user.id,
-            name: user.name,
+            name: user.name || user.username,
             photoUrl: user.photoUrl,
+            id_sendiri: id,
+            name_sendiri: username,
+            // photoUrl: user.photoUrl,
           };
 
           navigation.navigate("Chat", obj);

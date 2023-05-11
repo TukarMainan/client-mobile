@@ -3,28 +3,18 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as TalkRn from "@talkjs/expo";
-
-const initialMessages = [
-  {
-    _id: 1,
-    text: "Hello! How can I help you today?",
-    createdAt: new Date(),
-    user: {
-      _id: 2,
-      name: "John Doe",
-      avatar: "https://placeimg.com/140/140/any",
-    },
-  },
-  // Add more initial messages as needed
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ChatScreen(obj) {
-  // console.log("obj :", obj.route.params);
+  console.log("obj :", obj.route.params);
   const id = obj.route.params.id;
   const name = obj.route.params.name;
-  const photoUrl = obj.route.params.photoUrl;
+  const photoUrl = obj.route.params.image;
+  const id_sendiri = obj.route.params.id_sendiri;
+  const name_sendiri = obj.route.params.name_sendiri;
+  const image_sendiri = obj.route.params.image_sendiri;
 
-  const [messages, setMessages] = useState(initialMessages);
+  // const [messages, setMessages] = useState(initialMessages);
 
   function onSend(newMessages) {
     setMessages(previousMessages =>
@@ -37,11 +27,11 @@ export default function ChatScreen(obj) {
   }
 
   const me = {
-    id: "123456789",
-    name: "Alice",
-    email: "alice@example.com",
-    photoUrl: "https://talkjs.com/images/avatar-1.jpg",
-    welcomeMessage: "Hey there! How are you? :-)",
+    id: id_sendiri,
+    name: name_sendiri,
+    // email: "alice@example.com",
+    // photoUrl: image_sendiri,
+    welcomeMessage: "Hai! Mau tukar mainan ya?",
     role: "default",
   };
 
@@ -50,7 +40,7 @@ export default function ChatScreen(obj) {
     name,
     email: "Sebastian@example.com",
     photoUrl,
-    welcomeMessage: "Hey, how can I help? https://google.com",
+    welcomeMessage: "Hai! Mau tukar mainan ya?",
     role: "default",
   };
 

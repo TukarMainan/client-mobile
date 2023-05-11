@@ -91,7 +91,7 @@ function HomeTabNavigator() {
 
 export default function MainStackNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Register">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Homes"
         component={HomeTabNavigator}
