@@ -16,6 +16,7 @@ import * as Animatable from "react-native-animatable";
 import Logo from "../logo.png";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -25,6 +26,8 @@ export default function LoginScreen() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  const BASE_URL = "http://54.169.72.32";
 
   const navigation = useNavigation();
   useEffect(() => {
@@ -54,21 +57,35 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const { data } = await axios({
-        url: "http://localhost:3001/user",
+        url: `${BASE_URL}/users/login`,
         method: "POST",
         data: {
-          username: username,
-          password: password,
+          username,
+          password,
         },
       });
-      // console.log(username,password);
+      console.log("data :", data);
+      const access_token = data?.access_token;
+      // console.log("access_token :", access_token);
+
+      await AsyncStorage.setItem("data", JSON.stringify(data));
+      // await AsyncStorage.setItem("id", data?.id);
+      // await AsyncStorage.setItem("name", data?.name);
+      // await AsyncStorage.setItem("image", data?.image);
+      // const value = await AsyncStorage.getItem("access_token");
+      const value = await AsyncStorage.getItem("data");
+      // const id = await AsyncStorage.getItem("id");
+      console.log("value :", value);
+      // console.log("id :", id);
+
       navigation.navigate("Homes");
     } catch (error) {
-      Alert.alert(
-        "Invalid credentials",
-        "Please enter a valid username and password.",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
+      console.log("error :", error);
+      // Alert.alert(
+      //   "Invalid credentials",
+      //   "Please enter a valid username and password.",
+      //   [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      // );
     }
   };
 
@@ -80,15 +97,15 @@ export default function LoginScreen() {
     <View style={styles.container}>
       <Modal animationType="slide" transparent={true} visible={isVisible}>
         <View style={styles.modalView}>
-      <Image style={styles.iconLogo} source={require("../logo.png")} />
+          <Image style={styles.iconLogo} source={require("../logo.png")} />
 
-            <Text style={styles.titleModal}>Forgot Password</Text>
+          <Text style={styles.titleModal}>Forgot Password</Text>
           <View style={styles.secondContainer}>
             <TextInput
               secureTextEntry
               style={styles.inputTextModal}
               placeholder="Old password"
-              onChangeText={(text) => setOldPassword(text)}
+              onChangeText={text => setOldPassword(text)}
               value={oldPassword}
             />
           </View>
@@ -97,7 +114,7 @@ export default function LoginScreen() {
               secureTextEntry
               style={styles.inputTextModal}
               placeholder="New Password"
-              onChangeText={(text) => setNewPassword(text)}
+              onChangeText={text => setNewPassword(text)}
               value={newPassword}
             />
           </View>
@@ -108,17 +125,16 @@ export default function LoginScreen() {
           >
             <Text style={styles.buttonText}>Save New Password</Text>
           </TouchableOpacity>
-          <TouchableOpacity  
-          style={styles.button}
-          onPress={() => setIsVisible(false)}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setIsVisible(false)}
           >
-            <Text  style={styles.buttonText} > Close </Text>
+            <Text style={styles.buttonText}> Close </Text>
           </TouchableOpacity>
-          
         </View>
       </Modal>
       <Image style={styles.iconLogo} source={require("../logo.png")} />
-      <Text style={styles.logo}>TukarMainan.</Text>
+      <Text style={styles.logo}>TukarMainan</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
@@ -139,18 +155,21 @@ export default function LoginScreen() {
         />
       </View>
       <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-        <Text style={styles.loginText}>LOGIN</Text>
+        <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.forgotContainer} >
+      {/* <TouchableOpacity style={styles.forgotContainer}>
         <Text style={styles.forgot} onPress={() => setIsVisible(true)}>
           Forgot Password?
         </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.forgotContainer} >
-        <Text style={styles.register} onPress={() => navigation.navigate('Register')}>
+      </TouchableOpacity> */}
+      <TouchableOpacity style={styles.forgotContainer}>
+        <Text
+          style={styles.register}
+          onPress={() => navigation.navigate("Register")}
+        >
           Register Here!
         </Text>
-        </TouchableOpacity>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -167,13 +186,13 @@ const styles = StyleSheet.create({
   },
   gradientBackground: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "left",
     justifyContent: "center",
   },
   logo: {
     fontWeight: "bold",
     fontSize: 50,
-    color: "#e39ff6",
+    color: "#7C67F2",
     marginBottom: 40,
   },
   inputView: {
@@ -185,9 +204,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  secondContainer:{
-    borderRadius:50,
-    backgroundColor:'#f2f2f2',
+  secondContainer: {
+    borderRadius: 50,
+    backgroundColor: "#f2f2f2",
     width: "80%",
     height: 50,
     marginBottom: 20,
@@ -201,11 +220,11 @@ const styles = StyleSheet.create({
   inputTextModal: {
     height: 50,
     color: "#003f5c",
-    paddingBottom:10
+    paddingBottom: 10,
   },
   loginBtn: {
     width: "80%",
-    backgroundColor: "#e39ff6",
+    backgroundColor: "#7C67F2",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
@@ -215,7 +234,7 @@ const styles = StyleSheet.create({
   },
   forgotContainer: {
     width: "80%",
-    backgroundColor: "#c8a2c9",
+    backgroundColor: "#F68383",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
@@ -223,7 +242,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   loginText: {
-    color: "#F15F79",
+    color: "#FFF8E7",
     fontWeight: "bold",
   },
   forgot: {
@@ -231,9 +250,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   register: {
-    color: "#000000",
+    color: "#FFF8E7",
     fontSize: 16,
-    marginTop:8
+    marginTop: 8,
   },
   spinnerContainer: {
     flex: 1,
@@ -249,7 +268,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF8E7",
     borderRadius: 50,
   },
   title: {
@@ -261,7 +280,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 30,
     marginBottom: 20,
-    color:"#e39ff6"
+    color: "#e39ff6",
   },
   input: {
     width: "100%",
