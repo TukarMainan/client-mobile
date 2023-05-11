@@ -34,26 +34,27 @@ export default function RegisterScreen() {
     }, 3000);
   }, []);
 
+  const BASE_URL = "http://54.169.72.32";
+
+
   const handleRegister = async () => {
     try {
-      // const { data } = await axios ({
-      //   url:'http://localhost:3001/user',
-      //   method:"POST",
-      //   data: {
-      //     email,
-      //     username:username,
-      //     password:password,
-      //     selectedCity,
-      //   }
-      // })
-      // // console.log(email,selectedCity,username,password);
-      navigation.navigate("Homes");
+      console.log(email,selectedCity,username,password);
+
+      const { data } = await axios ({
+        url:`${BASE_URL}/users/register`,
+        method:"POST",
+        data: {
+          email,
+          username,
+          password,
+          city: selectedCity,
+        }
+      })
+      navigation.navigate("Login");
     } catch (error) {
-      Alert.alert(
-        "All fields must by filled",
-        "Please enter a valid username and password.",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
+      console.log(error)
+      
     }
   };
 
@@ -89,11 +90,11 @@ export default function RegisterScreen() {
           onValueChange={(itemValue) => setSelectedCity(itemValue)}
           style={styles.picker}
         >
-          <Picker.Item label="New York" value="New York" />
-          <Picker.Item label="Los Angeles" value="Los Angeles" />
-          <Picker.Item label="Chicago" value="Chicago" />
-          <Picker.Item label="Houston" value="Houston" />
-          <Picker.Item label="Philadelphia" value="Philadelphia" />
+          <Picker.Item label="Jakarta" value="Jakarta" />
+          <Picker.Item label="Surabaya" value="Surabaya" />
+          <Picker.Item label="Bandung" value="Bandung" />
+          <Picker.Item label="Yogyakarta" value="Yogyakarta" />
+          <Picker.Item label="Tangerang" value="Tangerang" />
         </Picker>
       </View>
       <View style={styles.inputView}>
