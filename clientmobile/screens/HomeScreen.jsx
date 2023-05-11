@@ -23,6 +23,8 @@ import NearbyCard from "../components/NearbyCard";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { fetchPosts } from "../stores/actions/actionCreator";
+import axios from "axios";
+import { BASE_URL } from "../config/api";
 
 const cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
 const categories = ["Technology", "Fashion", "Food", "Travel", "Sports"];
@@ -49,29 +51,64 @@ const mapStateToProps = (state) => {
 
 function Home({ posts, fetchPosts }) {
     const { loading: isLoading, posts: postsData } = posts;
+
+    const [isLoadingNearby, setIsLoadingNearby] = useState(true);
+    const [nearbyPosts, setNearbyPosts] = useState([]);
+    const [location, setLocation] = useState(null);
+
+    async function fetchNearbyPost() {
+        try {
+            let latitude = location?.latitude || -6.2146;
+            let longitude = location?.longitude || 106.8451;
+            const { data } = await axios.get(
+                BASE_URL + "/public/posts/nearby",
+                {
+                    headers: {
+                        location: JSON.stringify({
+                            latitude,
+                            longitude,
+                        }),
+                    },
+                }
+            );
+            console.log(data);
+            setNearbyPosts(data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoadingNearby(false);
+        }
+    }
+
     const [isVisible, setIsVisible] = useState(false);
     const [selectedCity, setSelectedCity] = useState(cities[0]);
     const [selectedCategory, setSelectedCategory] = useState(categories[0]);
     const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
     const [searchQuery, setSearchQuery] = useState(null);
-    const [location, setLocation] = useState(null);
+
+    async function getLocation() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+            // Handle permission not granted error
+            return;
+        }
+
+        let { coords } = await Location.getCurrentPositionAsync({});
+        setLocation(coords);
+    }
 
     useEffect(() => {
         fetchPosts();
-
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                // Handle permission not granted error
-                return;
-            }
-
-            let { coords } = await Location.getCurrentPositionAsync({});
-            setLocation(coords);
-        })();
+        getLocation();
     }, []);
 
-    if (isLoading) {
+    useEffect(() => {
+        if (location) {
+            fetchNearbyPost();
+        }
+    }, [location]);
+
+    if (isLoading && isLoadingNearby) {
         return (
             <View style={styles.spinnerContainer}>
                 <Spinner
@@ -244,14 +281,22 @@ function Home({ posts, fetchPosts }) {
                         {/* </View> */}
                         <ScrollView horizontal={true}>
                             <View style={styles.gridList}>
-                                {postsData?.map((item) => (
-                                    <TouchableOpacity
-                                        onPress={() => handleItemPress(item.id)}
-                                        key={item.id}
-                                    >
-                                        <NearbyCard item={item} />
-                                    </TouchableOpacity>
-                                ))}
+                                {nearbyPosts.length !== 0 ? (
+                                    nearbyPosts?.map((item) => (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                handleItemPress(item.id)
+                                            }
+                                            key={item.id}
+                                        >
+                                            <NearbyCard item={item} />
+                                        </TouchableOpacity>
+                                    ))
+                                ) : (
+                                    <Text style={styles.recommendation}>
+                                        No nearby posts trade found
+                                    </Text>
+                                )}
                             </View>
                         </ScrollView>
                     </View>
