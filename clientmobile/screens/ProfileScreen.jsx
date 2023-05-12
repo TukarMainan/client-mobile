@@ -211,6 +211,14 @@ export default function ProfilePage() {
     getUser();
   }, []);
 
+  let ratingsAverageScore = 0;
+  if (userData?.ratings?.length > 1) {
+    let sum = userData?.ratings
+      .slice(1)
+      .reduce((acc, val) => acc + val, 0);
+    ratingsAverageScore = sum / (userData?.ratings?.length - 1);
+  }
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -415,11 +423,11 @@ export default function ProfilePage() {
           showsHorizontalScrollIndicator={false}
         /> */}
           <View style={styles.reviewBox}>
-            <Text style={styles.reviewText}>Great</Text>
+            <Text style={styles.reviewText}>{ratingsAverageScore}</Text>
             <StarRating
               disabled={true}
               maxStars={5}
-              rating={3}
+              rating={ratingsAverageScore}
               starSize={20}
               fullStarColor={"#f1c40f"}
               emptyStarColor={"#ccc"}
