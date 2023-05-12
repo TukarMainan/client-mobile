@@ -75,6 +75,11 @@ const DetailsPage = ({ route }) => {
       console.log("hello");
       console.log("reportName :", reportName);
       console.log("id barang: ", id);
+
+      const token = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(token);
+
+
       const { data } = await axios.post(
         `${BASE_URL}/reports`,
         {
@@ -84,7 +89,8 @@ const DetailsPage = ({ route }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            access_token: access_token,
+            access_token: obj.access_token,
+            // access_token: access_token,
           },
         }
       );
