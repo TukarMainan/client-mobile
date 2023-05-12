@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -188,9 +188,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.24,
     shadowRadius: 3.84,
     elevation: 5,
-    marginBottom: 15,
     backgroundColor: "#FFF",
-    marginTop:10
+    marginTop:10,
+    height: 380
   },
   card: {
     width: 100,

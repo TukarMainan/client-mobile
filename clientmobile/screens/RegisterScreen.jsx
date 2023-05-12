@@ -21,7 +21,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedCity, setSelectedCity] = useState("New York");
+  const [selectedCity, setSelectedCity] = useState("Jakarta");
   const [animationValue] = useState(new Animated.Value(0));
   const navigation = useNavigation()
 
