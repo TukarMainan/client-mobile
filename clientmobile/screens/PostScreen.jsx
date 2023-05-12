@@ -30,6 +30,7 @@ import {
   MenuOption,
 } from "react-native-popup-menu";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Post() {
   const navigation = useNavigation();
@@ -84,13 +85,16 @@ export default function Post() {
 
     // console.log(imageCam);
     try {
+      const token = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(token);
       await axios({
         url: `${BASE_URL}/posts`,
         method: "POST",
         data: data,
         headers: {
-          access_token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4Mzc4MzQ2MX0.g3JCpM4XJB1ZKQAaZ71m8q7zPBYLv2XIfo191lhzRJg",
+          access_token: obj.access_token,
+          // access_token:
+          //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMDIzZmIxLTdkODgtNDkyMS1hZTZhLTE2MzUwYWM4YjJiMCIsImlhdCI6MTY4Mzc4MzQ2MX0.g3JCpM4XJB1ZKQAaZ71m8q7zPBYLv2XIfo191lhzRJg",
           "Content-Type": "multipart/form-data",
         },
       });
