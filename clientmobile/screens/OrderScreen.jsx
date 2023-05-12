@@ -161,7 +161,7 @@ export default function Trade({ route }) {
                     <TabReceiving trades={tradesTarget} />
                 )}
             </View>
-            <Modal animationType="fade" transparent={true} visible={isVisible}>
+            {/* <Modal animationType="fade" transparent={true} visible={isVisible}>
                 <View
                     style={{
                         flex: 1,
@@ -256,7 +256,7 @@ export default function Trade({ route }) {
                         </View>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
         </>
     );
 }
@@ -334,8 +334,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     spinnerLogo: {
-        width: 40,
-        height: 40,
+        width: 85,
+        height: 85,
     },
     description: {
         // paddingRight: 5,
