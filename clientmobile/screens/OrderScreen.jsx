@@ -21,13 +21,13 @@ import Logo from "../logo.png";
 import TabRequesting from "../components/TabRequesting";
 import TabReceiving from "../components/TabReceiving";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Picker } from "@react-native-picker/picker";
 export default function Trade({ route }) {
     const [isTradesLoading, setIsTradesLoading] = useState(true);
     const [isTradesTargetLoading, setIsTradesTargetLoading] = useState(true);
     const [trades, setTrades] = useState([]);
     const [tradesTarget, setTradesTarget] = useState([]);
-
+    const [selectedTab, setSelectedTab] = useState('On going request');
     async function fetchTrades() {
         try {
             const token = await AsyncStorage.getItem("data");
@@ -144,16 +144,16 @@ export default function Trade({ route }) {
     return (
         <>
             <View>
-                <View>
-                    <Button
-                        title="On going request"
-                        onPress={handleRequestingTabPress}
-                    />
-                    <Button
-                        title="Incoming request"
-                        onPress={handleReceivingTabPress}
-                    />
-                </View>
+            <View style={styles.pickerContainer}>
+  <Picker
+    style={styles.picker}
+    selectedValue={selectedTab}
+    onValueChange={(value) => setSelectedTab(value)}
+  >
+    <Picker.Item label="On going request" value="ongoing" />
+    <Picker.Item label="Incoming request" value="incoming" />
+  </Picker>
+</View>
                 {activeTab === "requesting" && (
                     <TabRequesting trades={trades} />
                 )}
@@ -262,6 +262,21 @@ export default function Trade({ route }) {
 }
 
 const styles = StyleSheet.create({
+  pickerContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  picker: {
+    padding: 12,
+  },
     fontDesc: {
         // paddingLeft: 1,
         // fontSize: 18,

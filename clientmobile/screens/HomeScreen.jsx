@@ -83,6 +83,7 @@ function Home({ posts, fetchPosts }) {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
   const [searchQuery, setSearchQuery] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
 
   async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -106,7 +107,7 @@ function Home({ posts, fetchPosts }) {
     }
   }, [location]);
 
-  if (isLoading && isLoadingNearby) {
+  if (isLoading ) {
     return (
       <View style={styles.spinnerContainer}>
         <Spinner
@@ -142,6 +143,14 @@ function Home({ posts, fetchPosts }) {
 
   const handleSearch = searchedTitle => {
     setSearchQuery(searchedTitle);
+    if (searchedTitle.length > 0) {
+      const filteredResults = originalData.filter(item =>
+        item.title.toLowerCase().includes(searchedTitle.toLowerCase())
+      );
+      setSearchResults(filteredResults);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   return (
@@ -296,9 +305,9 @@ function Home({ posts, fetchPosts }) {
                   );
                 })}
               </View>
-              {/* {searchQuery ? (
+              {/* {searchResults ? (
                                 <View style={styles.cardContainer}>
-                                    {searchQuery.map((item) => (
+                                    {searchResults.map((item) => (
                                         <TouchableOpacity
                                             onPress={() =>
                                                 handleItemPress(item)
