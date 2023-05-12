@@ -18,8 +18,9 @@ import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import axios  from 'axios'
+import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import FormData from "form-data";
 
 const DATA = [
   { id: "1", text: "Review 1" },
@@ -96,7 +97,7 @@ export default function ProfilePage() {
   const [banner, setBanner] = useState("");
   const [profileImg, setProfileImg] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
-  const [note, setNote] = useState("");
+  const [notes, setNote] = useState("");
   const [city, setCity] = useState("");
   const [userData, setUserData] = useState({});
   function handleOpenModal() {
@@ -120,7 +121,7 @@ export default function ProfilePage() {
 
   function handleUserInfo() {
     setIsModalOpen(false);
-      //update
+    //update
   }
 
   const pickImage = async () => {
@@ -162,19 +163,55 @@ export default function ProfilePage() {
         url: `${BASE_URL}/public/users/${obj.id}`,
         method: "GET",
       });
-      console.log(data.Posts , "POST")
-      setUserData(data) 
+      console.log(data.Posts, "POST");
+      setUserData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function updateInfo() {
+    const datuk = new FormData()
+    datuk.append("name",name)
+    datuk.append("profileImg",profileImg[0].uri)
+    datuk.append("backroundImg",banner[0].uri)
+    datuk.append("notes",notes)
+    datuk.append("phoneNumber",phoneNum)
+    datuk.append("city",city)
+    console.log(profileImg[0], "profileImg");
+    console.log(banner[0], "banner");
+    try {
+      const value = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(value);
+      // console.log(obj.id);
+
+      // await axios({
+      //   url: `http://54.169.72.32/users`,
+      //   method: "PUT",
+      //   data:datuk,
+      //   headers:{
+      //     access_token: obj.access_token,
+      //     "Content-Type": "multipart/form-data",
+      //   }
+      // });
+      await axios.put('http://54.169.72.32/users',datuk,{
+        headers:{
+          access_token: obj.access_token,
+          "Content-Type": "multipart/form-data",
+        }
+      })
+      console.log(datuk,'<<<<<<<<<');
+      setUserData(datuk);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    getUser()
-  },[])
+    getUser();
+  }, []);
 
   return (
-
     <ScrollView>
       <View style={styles.container}>
         {/* Profile picture and background */}
@@ -228,15 +265,6 @@ export default function ProfilePage() {
           <Modal visible={isModalOpen}>
             <ScrollView style={styles.container}>
               <View style={styles.inputContainer}>
-                <Text style={styles.titleLabel}>Username</Text>
-                <TextInput
-                  placeholder="Username"
-                  style={styles.input}
-                  value={username}
-                  onChangeText={(text) => setUsername(text)}
-                />
-              </View>
-              <View style={styles.inputContainer}>
                 <Text style={styles.titleLabel}>Name</Text>
                 <TextInput
                   placeholder="Name"
@@ -245,26 +273,7 @@ export default function ProfilePage() {
                   onChangeText={(text) => setName(text)}
                 />
               </View>
-              <View style={styles.inputContainer}>
-                <Text style={styles.titleLabel}>Email</Text>
-                <TextInput
-                  placeholder="Email"
-                  style={styles.input}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                />
-              </View>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.titleLabel}>Password</Text>
-                <TextInput
-                  secureTextEntry
-                  placeholder="Password"
-                  style={styles.input}
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
-                />
-              </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.dua}>Profile Image</Text>
                 <TouchableOpacity style={styles.con} onPress={pickImage}>
@@ -320,7 +329,7 @@ export default function ProfilePage() {
                 <TextInput
                   placeholder="Note"
                   style={styles.input}
-                  value={note}
+                  value={notes}
                   onChangeText={(text) => setNote(text)}
                 />
               </View>
@@ -346,20 +355,20 @@ export default function ProfilePage() {
                     value=""
                     enabled={false}
                   />
-                  <Picker.Item label="New York" value="New York" />
-                  <Picker.Item label="Los Angeles" value="Los Angeles" />
-                  <Picker.Item label="Chicago" value="Chicago" />
-                  <Picker.Item label="Houston" value="Houston" />
-                  <Picker.Item label="Philadelphia" value="Philadelphia" />
+                  <Picker.Item label="Jakarta" value="Jakarta" />
+                  <Picker.Item label="Surabaya" value="Surabaya" />
+                  <Picker.Item label="Bandung" value="Bandung" />
+                  <Picker.Item label="Yogyakarta" value="Yogyakarta" />
+                  <Picker.Item label="Tangerang" value="Tangerang" />
                 </Picker>
               </View>
               <View style={{ flex: 1, flexDirection: "column" }}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
-                  onPress={handleCloseModal}
+                  onPress={updateInfo}
                 >
                   <Text
-                    onPress={handleUserInfo}
+                    
                     style={{
                       textAlign: "center",
                       fontSize: 20,
@@ -377,7 +386,7 @@ export default function ProfilePage() {
                   onPress={() => setIsModalOpen(false)}
                 >
                   <Text
-                    onPress={handleUserInfo}
+                   
                     style={{
                       textAlign: "center",
                       fontSize: 20,

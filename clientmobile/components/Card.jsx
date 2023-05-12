@@ -53,7 +53,7 @@ export default function Card({ item }) {
     <View style={styles.container}>
       <Image source={{ uri: item?.images[0] }} style={styles.image} />
       <Text style={styles.blackCategory}>{locationName}</Text>
-      <Text style={styles.name}>{item?.title}</Text>
+      <Text numberOfLines={4} ellipsizeMode='tail' style={styles.name}>{item?.title}</Text>
       <Text style={styles.category}>{item?.Category?.name}</Text>
       <Text style={styles.blackCategory}>{timePostCreatedInString}</Text>
     </View>
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingLeft: 8,
     paddingTop: 8,
+    height:80
   },
   category: {
     fontSize: 12,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 7,
     borderBottomRightRadius: 7,
     color: "#888",
-    paddingBottom: 12,
+    paddingBottom: 20,
     paddingTop: 6,
   },
 });

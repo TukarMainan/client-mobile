@@ -334,8 +334,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     spinnerLogo: {
-        width: 40,
-        height: 40,
+        width: 85,
+        height: 85,
     },
     description: {
         // paddingRight: 5,

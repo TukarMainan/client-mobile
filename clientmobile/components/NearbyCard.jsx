@@ -45,8 +45,8 @@ export default function NearbyCard({ item }) {
   return (
     <View style={styles.container}>
       <Image source={{ uri: item?.images[0] }} style={styles.image} />
-      <Text style={styles.location}>{locationName}</Text>
-      <Text style={styles.name}>{item?.title}</Text>
+      <Text  style={styles.location}>{locationName}</Text>
+      <Text   numberOfLines={2} ellipsizeMode='tail'  style={styles.name}>{item?.title}</Text>
       <Text style={styles.location}>{item?.Category.name}</Text>
       <Text style={styles.category}>{timePostCreatedInString}</Text>
     </View>
@@ -85,7 +85,9 @@ const styles = StyleSheet.create({
     // textAlign: "center",
     color: "#333333",
     textAlign: "left",
-    paddingLeft: 20,
+    paddingLeft: 15,
+    height:55,
+
   },
   category: {
     fontSize: 12,

@@ -72,35 +72,37 @@ export default function Request({ trades }) {
     navigation.navigate("Detail", { id });
   };
 
-  function handleComplete() {
-    navigation.navigate("Review");
+  function handleComplete(id, postId, name) {
+    const obj = { id, postId, name };
     console.log("complete");
+    navigation.navigate("Review", obj);
   }
   const handleChat = async (id, name, image) => {
-        try {
-            console.log(id);
-            const data = await AsyncStorage.getItem("data");
+    try {
+      console.log(id);
+      const data = await AsyncStorage.getItem("data");
 
-            const obj = JSON.parse(data);
-            console.log("obj :", obj);
+      const obj = JSON.parse(data);
+      console.log("obj :", obj);
 
-            navigation.navigate("Chat", {
-                id,
-                name,
-                image,
-                id_sendiri: obj.id,
-                name_sendiri: obj.username,
-                // image_sendiri: obj.profileImg,
-            });
-        } catch (err) {
-            console.log("err :", err);
-        }
-    };
+      navigation.navigate("Chat", {
+        id,
+        name,
+        image,
+        id_sendiri: obj.id,
+        name_sendiri: obj.username,
+        // image_sendiri: obj.profileImg,
+      });
+    } catch (err) {
+      console.log("err :", err);
+    }
+  };
 
   return (
     <ScrollView>
       <View style={styles.container}>
         {trades?.map(item => {
+          console.log("item :", item);
           return (
             <View style={styles.cardContainer} key={item.id}>
               <TouchableOpacity
@@ -146,45 +148,45 @@ export default function Request({ trades }) {
                       {/* di bawah sini keluar normal */}
 
                       <TouchableOpacity
-                                                style={styles.description}
-                                                onPress={() =>
-                                                    handleChat(
-                                                        item?.SenderUserId,
-                                                        item?.SenderUser?.name,
-                                                        item?.SenderUser
-                                                            ?.profileImg
-                                                    )
-                                                }
-                                            >
-                                                <Text style={styles.reject}>
-                                                    Chat User
-                                                </Text>
-                                            </TouchableOpacity>
+                        style={styles.description}
+                        onPress={() =>
+                          handleChat(
+                            item?.SenderUserId,
+                            item?.SenderUser?.name,
+                            item?.SenderUser?.profileImg
+                          )
+                        }
+                      >
+                        <Text style={styles.reject}>Chat User</Text>
+                      </TouchableOpacity>
                     </View>
                   </>
                 ) : item.Status == "complete" ? (
                   <View style={styles.containerButton}>
                     <TouchableOpacity
                       style={styles.description}
-                      onPress={handleComplete}
+                      onPress={() =>
+                        handleComplete(
+                          item?.SenderUserId,
+                          item?.SenderPostId,
+                          item?.SenderUser?.name
+                        )
+                      }
                     >
                       <Text style={styles.font}>Complete</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                                                style={styles.description}
-                                                onPress={() =>
-                                                    handleChat(
-                                                        item?.SenderUserId,
-                                                        item?.SenderUser?.name,
-                                                        item?.SenderUser
-                                                            ?.profileImg
-                                                    )
-                                                }
-                                            >
-                                                <Text style={styles.reject}>
-                                                    Chat User
-                                                </Text>
-                                            </TouchableOpacity>
+                      style={styles.description}
+                      onPress={() =>
+                        handleChat(
+                          item?.SenderUserId,
+                          item?.SenderUser?.name,
+                          item?.SenderUser?.profileImg
+                        )
+                      }
+                    >
+                      <Text style={styles.reject}>Chat User</Text>
+                    </TouchableOpacity>
                   </View>
                 ) : null}
               </View>
@@ -235,7 +237,6 @@ const styles = StyleSheet.create({
     shadowOffset: {
       width: 0,
       height: 2,
-
     },
     shadowOpacity: 0.24,
     shadowRadius: 3.84,
