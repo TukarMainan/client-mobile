@@ -31,7 +31,6 @@ const DetailsPage = ({ route }) => {
   const { id } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const [postDetailData, setPostDetailData] = useState({});
-
   async function fetchPostDetail(id) {
     try {
       const { data } = await axios.get(BASE_URL + "/public/posts/" + id);
@@ -99,6 +98,9 @@ const DetailsPage = ({ route }) => {
   };
   const handleSaveComment = async () => {
     try {
+      const token = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(token);
+
       console.log(commentPost,id)
       const { data } = await axios.post(
         `${BASE_URL}/comments`,
@@ -109,7 +111,7 @@ const DetailsPage = ({ route }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            access_token: access_token,
+            access_token: obj.access_token,
           },
         }
       );
@@ -122,9 +124,10 @@ const DetailsPage = ({ route }) => {
 
   const navigation = useNavigation();
 
-  function handleTradeButton(event, item) {
-    event.persist();
-    navigation.navigate("Trade", { item });
+  function handleTradeButton(TargetUserId, TargetPostId) {
+    // event.persist();
+    console.log(TargetUserId, TargetPostId);
+    navigation.navigate("Trade", { TargetUserId, TargetPostId });
   }
 
   const BlinkingText = ({ text, style }) => {
@@ -302,7 +305,7 @@ const DetailsPage = ({ route }) => {
 
             <TouchableOpacity
               style={styles.tradeButton}
-              onPress={handleTradeButton}
+              onPress={() => handleTradeButton(postDetailData?.UserId, postDetailData?.id)}
             >
               <Text style={styles.tradeText}>Request trade 🔁</Text>
             </TouchableOpacity>
@@ -315,7 +318,6 @@ const DetailsPage = ({ route }) => {
             >
               <Text style={styles.tradeText}>Report❗️</Text>
             </TouchableOpacity>
-
             <View style={styles.header}>
               <View style={styles.avatarContainer}>
                 <Image

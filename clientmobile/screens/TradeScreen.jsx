@@ -9,6 +9,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_URL } from "../config/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Spinner from "react-native-loading-spinner-overlay";
+import Logo from "../logo.png";
+import * as Animatable from "react-native-animatable";
 
 const DATA = [
   {
@@ -58,13 +64,73 @@ const DATA = [
 ];
 
 export default function Trade({ route }) {
+  const { TargetUserId, TargetPostId } = route.params;
+  console.log(TargetUserId, TargetPostId);
+
+  const [isLoadingUserPosts, setILoadingUserPosts] = useState(true);
+  const [userPosts, setUserPosts] = useState([]);
+
   const navigation = useNavigation();
-  function handleTrade() {
-    navigation.navigate("Order");
-    // update status
-    console.log("handleTrade");
+
+  async function handleTrade(SenderPostId) {
+    try {
+      // console.log(SenderPostId);
+      
+      const token = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(token);
+      // console.log(obj);
+
+      const { data } = await axios.post(`${BASE_URL}/trades`, {
+        TargetPostId, TargetUserId, SenderPostId
+      }, {
+        headers: {
+          access_token: obj.access_token
+        }
+      });
+
+      navigation.navigate("Order");
+    } catch (error) {
+      console.log(error);
+    }
   }
   //   const { item } = route.params;
+
+  async function fetchUserPosts() {
+    try {
+      const token = await AsyncStorage.getItem("data");
+      const obj = JSON.parse(token);
+      // console.log(obj);
+
+      const { data } = await axios.get(`${BASE_URL}/public/users/${obj.id}`);
+      // console.log("data :", data);
+      setUserPosts(data?.Posts)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setILoadingUserPosts(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchUserPosts();
+  }, [])
+
+  if (isLoadingUserPosts) {
+    return (
+      <View style={styles.spinnerContainer}>
+        <Spinner
+          visible={isLoadingUserPosts}
+          customIndicator={
+            <Animatable.View animation="bounce" iterationCount="infinite">
+              <Image source={Logo} style={styles.spinnerLogo} />
+            </Animatable.View>
+          }
+          overlayColor="rgba(0, 0, 0, 0.5)"
+        />
+      </View>
+    );
+  }
+
   return (
     <>
       <ScrollView>
@@ -73,7 +139,7 @@ export default function Trade({ route }) {
             <Image source={require("../logo.png")} style={{width:50,height:150,flex:1}}/>
             <Text style={{flex:1,}} >Your Toys</Text>
           </View> */}
-          {DATA?.map((item) => {
+          {userPosts?.map((item) => {
             return (
               <View style={styles.cardContainer} key={item.id}>
                 
@@ -82,7 +148,7 @@ export default function Trade({ route }) {
                 </View>
                 <TouchableOpacity
                   style={styles.description}
-                  onPress={handleTrade}
+                  onPress={() => handleTrade(item.id)}
                 >
                   <Text>Trade with this toy</Text>
                 </TouchableOpacity>
@@ -96,6 +162,15 @@ export default function Trade({ route }) {
 }
 
 const styles = StyleSheet.create({
+  spinnerContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  spinnerLogo: {
+    width: 40,
+    height: 40,
+  },
   container: {
     flex: 1,
     justifyContent: "flex-start",

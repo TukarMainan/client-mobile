@@ -161,7 +161,7 @@ export default function Trade({ route }) {
                     <TabReceiving trades={tradesTarget} />
                 )}
             </View>
-            <Modal animationType="fade" transparent={true} visible={isVisible}>
+            {/* <Modal animationType="fade" transparent={true} visible={isVisible}>
                 <View
                     style={{
                         flex: 1,
@@ -256,7 +256,7 @@ export default function Trade({ route }) {
                         </View>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
         </>
     );
 }
