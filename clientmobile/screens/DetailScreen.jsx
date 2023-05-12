@@ -306,9 +306,9 @@ const DetailsPage = ({ route }) => {
             >
               <Text style={styles.tradeText}>Request trade 🔁</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
+            {/* <TouchableOpacity style={styles.tradeButton} onPress={handleStatus}>
               <Text style={styles.tradeText}>Set Inactive</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={handleDelete}
@@ -530,8 +530,8 @@ const styles = StyleSheet.create({
     borderColor: "#000000",
     backgroundColor: "#F68383",
     borderRadius: 10,
-    marginLeft: 90,
-    marginRight: 90,
+    marginLeft: 80,
+    marginRight: 80,
     marginTop: 20,
     height: 40,
   },
@@ -547,8 +547,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   spinnerLogo: {
-    width: 40,
-    height: 40,
+    width: 85,
+    height: 85,
   },
   label: {
     fontSize: 18,

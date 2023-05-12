@@ -328,7 +328,7 @@ export default function Post() {
         <TouchableOpacity style={styles.con} onPress={pickImage}>
           <Text style={{ textAlign: "center", paddingTop: 17 }}> Browse </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.con}
           onPress={() => {
             setShowCamera(true);
@@ -337,7 +337,7 @@ export default function Post() {
           <Text style={{ textAlign: "center", paddingTop: 17 }}>
             Take a picture
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View>
           {image.length > 0 && (
             <View style={styles.resultContainer}>
@@ -696,6 +696,7 @@ const styles = StyleSheet.create({
     height: 200,
     backgroundColor: "#f2f2f2",
     borderRadius: 20,
+    marginBottom:20
   },
   map: {
     flex: 1,
